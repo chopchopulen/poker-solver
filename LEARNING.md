@@ -57,3 +57,20 @@ $$\bar\sigma^T(I,a)=\frac{\sum_{t=1}^T t\,\pi_i^{\sigma^t}(I)\,\sigma^t(I,a)}{\s
 1. *Why floor regrets at zero?* Negative regret only says an action was bad in the past. Keeping it delays that action's return when the opponent's strategy changes. Flooring discards stale history so play adapts fast.
 2. *Why average with weight $t$?* Early iterates are far from equilibrium. Linear weighting shrinks their influence, so the average converges faster. We still evaluate the average, not the current strategy.
 3. *Does CFR+ beat $O(1/\sqrt T)$ in theory?* No, the proven bound is the same. The gain is empirical (hundreds of times fewer iterations here), observed not guaranteed.
+
+## Phase 4: Leduc poker + external-sampling MCCFR
+
+**Leduc rules.** 6 cards (J, Q, K in 2 suits). Each player antes 1 and gets one private card. Round 1: bets/raises of 2, max 2 raises. Then one public card is dealt. Round 2: bets/raises of 4, max 2 raises. At showdown a pair (private rank = public rank) beats high card, otherwise higher rank wins; equal ranks split. 30 private deals, 4 board outcomes. Infoset key = own card rank + public card (if dealt) + betting history, so the opponent's card is never visible.
+
+**Why MCCFR.** Vanilla CFR walks the whole tree every iteration. External sampling traverses all actions of the updating player $i$ but samples one action at each chance node and each opponent node from $\sigma_{-i}$. Iterations are far cheaper but noisier.
+
+**Unbiased estimator.** Sampled terminal $z$ has probability $q(z)=\pi_{-i}^{\sigma}(z)\,\pi_c(z)$ (opponent and chance reach; player $i$'s own actions are not sampled). The sampled counterfactual value
+$$\tilde v_i(I,a)=\sum_{z\in Q\cap Z_I}\frac{u_i(z)\,\pi_i^{\sigma}(z[I]\to z)}{q(z)},\qquad \mathbb{E}_Q[\tilde v_i(I,a)]=v_i^{\sigma}(I,a)$$
+is unbiased because $q(z)$ cancels the $\pi_{-i}\pi_c$ factor in the true counterfactual value. Hence $\tilde r(I,a)=\tilde v_i(I,a)-\sum_{a'}\sigma(I,a')\tilde v_i(I,a')$ is an unbiased regret estimate, and the average strategy converges to Nash with expected exploitability $O(1/\sqrt T)$. The average strategy is accumulated at the opponent's nodes (where actions are sampled from $\sigma$), so no extra reach weighting is needed.
+
+**Measured (Leduc, 140 s per solver).** CFR 12.2, CFR+ 0.015, MCCFR 10.5 mbb/hand (`analysis/results.md`). CFR+ wins on this small game; MCCFR runs 1.17M iterations vs 8k for CFR but they are noisy. MCCFR pays off when the tree is too big to traverse.
+
+**Q&A**
+1. *Why is the external-sampling estimate unbiased?* Each sampled terminal is divided by its sampling probability $\pi_{-i}\pi_c$, cancelling the opponent/chance reach in the counterfactual value, so the expectation equals the full-tree value.
+2. *Why does CFR+ beat MCCFR on Leduc?* Leduc is small enough to traverse fully, so CFR+ iterations carry no sampling variance and the regret floor speeds convergence. MCCFR's edge is cost per iteration, which matters only for huge trees.
+3. *Why must infoset keys hide the opponent card?* Keys must contain only what the player sees. Including the opponent card lets the solver peek, giving an invalid strategy whose exploitability looks artificially low.

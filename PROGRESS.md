@@ -22,3 +22,4 @@
 - P4.3 solvers/mccfr.py (external sampling, seeded numpy RNG, avg strategy accumulated at opp nodes) + tests/test_mccfr.py; Kuhn 20k iters value within 0.02 of -1/18, Leduc expl 3000<100 iters, seeded determinism; pytest -q 53 passed in 6s.
 - P4.4 scripts/leduc_benchmark.py -> analysis/leduc_benchmark.csv (140s budget/solver): cfr 7999 it 12.2 mbb/hand, cfr_plus 4740 it 0.015 mbb/hand, mccfr 1.17M it 10.5 mbb/hand; pytest -q 53 passed. Repro: python scripts/leduc_benchmark.py
 - P4.5 analysis/plot_leduc.py -> analysis/leduc_benchmark.png (log-scale mbb/hand vs seconds, 3 solvers); results.md Leduc entry (final: cfr 12.25, cfr_plus 0.0154, mccfr 10.51); pytest -q 53 passed. Repro: python analysis/plot_leduc.py
+- P4.6 LEARNING.md Phase 4 entry (Leduc rules, MCCFR unbiased estimator, 3 Q&As) + README Leduc results row and chart; pytest -q passes.

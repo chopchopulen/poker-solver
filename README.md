@@ -53,15 +53,18 @@ Every number below will link to the exact command that reproduces it (see `analy
 | Kuhn exploitability after 100k iters (vanilla CFR) | 6.76e-4 (log-log slope -0.544, T>=10k) | `python scripts/kuhn_convergence.py && python analysis/plot_convergence.py` |
 | Kuhn exploitability after 100k iters (CFR+) | 2.14e-6 | `python scripts/kuhn_convergence.py --solver cfr_plus && python analysis/plot_convergence.py` |
 | CFR+ speedup vs vanilla (iters to expl < 1e-3) | 331x (43080 vs 130 iters) | `python scripts/kuhn_convergence.py --solver cfr && python scripts/kuhn_convergence.py --solver cfr_plus` |
-| Leduc exploitability (mbb/hand), all solvers | TBD | TBD |
+| Leduc exploitability (mbb/hand) after 140 s: CFR / CFR+ / MCCFR | 12.25 / 0.0154 / 10.51 | `python scripts/leduc_benchmark.py && python analysis/plot_leduc.py` |
 | Best response win rate vs bots (95% CI) | TBD | TBD |
 | Adaptive agent win rate vs bots (95% CI) | TBD | TBD |
 
 ## Charts
 ![Kuhn convergence](analysis/kuhn_convergence.png)
 
-Kuhn exploitability vs iterations (log-log), vanilla CFR and CFR+. Planned:
-- Leduc exploitability (mbb/hand) vs wall-clock time, all solvers
+Kuhn exploitability vs iterations (log-log), vanilla CFR and CFR+.
+
+![Leduc benchmark](analysis/leduc_benchmark.png)
+
+Leduc exploitability (mbb/hand) vs wall-clock time (log scale): vanilla CFR, CFR+, external-sampling MCCFR.
 
 ## What I learned
 Detailed notes per phase in [LEARNING.md](LEARNING.md). Summary will be filled in as phases complete.
