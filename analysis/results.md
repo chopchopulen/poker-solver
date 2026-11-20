@@ -61,6 +61,8 @@ python analysis/plot_leduc.py
 
 Expected summary line from the last command: `plot_leduc: 73 pts, cfr final=12.25, cfr_plus final=0.01541, mccfr final=10.51, wrote analysis/leduc_benchmark.png`
 
+Wall-clock caveat (rerun 2026-11-20, same machine): CFR and CFR+ hit the same iteration checkpoints with the same exploitability (12.26 / 0.0254 mbb/hand at 6,157 / 3,650 iters), but MCCFR completed only 693,198 iterations by 140 s (14.39 mbb/hand) vs 901,649 (12.61) in the committed csv. The time-budget numbers depend on machine speed and load; the committed csv is the reported run.
+
 ## Leduc game value (P4.7 verification)
 
 CFR+ 3000 iterations: P1 value of average strategy = -0.085605 chips/hand. Certified bounds on the true game value from exact best responses, $-BR_1(\sigma_0) \le v^* \le BR_0(\sigma_1)$: v* in [-0.085655, -0.085586] (exploitability 3.45e-05 chips/hand). The interval contains the commonly cited Leduc value of about -0.0856 for P1. That citation was not checked against a source in this run because web access was denied.
@@ -108,7 +110,7 @@ Game: deck 10, mids (8,11,14,17,20), spreads (1,2,4), taker_sees 1, noise_prob 0
 | Result | Value | Source | Command |
 |---|---|---|---|
 | CFR+ exploitability, 2000 iters (232 s) | 3.85e-05 | analysis/mm_game_convergence.csv (last row) | `python scripts/mm_solve.py --iters 2000` |
-| max abs(avg mid - E[V given MM card]) | 3.22 (card 10: 17.0 vs 20.0); MM spread 4 for every card | analysis/mm_game_quotes.csv | `python scripts/mm_quotes.py` |
+| max abs(avg mid - E[V given MM card]) | 3.22 (card 2: avg mid 17.00 vs E[V] 13.78); MM spread 4 for every card | analysis/mm_game_quotes.csv | `python scripts/mm_quotes.py` |
 | Avg spread, taker_sees 0/1/2 (noise 0.25) | 3.9988 / 3.9999 / 3.9999 (flat at grid max; no widening observed) | analysis/mm_game_info.csv | `python scripts/mm_info.py --iters 1000` |
 | Trade rate, taker_sees 0/1/2 (noise 0.25) | 0.177 / 0.508 / 0.633 | analysis/mm_game_info.csv | `python scripts/mm_info.py --iters 1000` |
 | MM EV vs informed flow, taker_sees 0/1/2 | -0.000 / -0.466 / -1.211 | analysis/mm_game_info.csv | `python scripts/mm_info.py --iters 1000` |

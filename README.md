@@ -14,8 +14,9 @@ All results are verified against known values (e.g. Kuhn poker game value = -1/1
 Requires Python 3.11.
 
 ```bash
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-pytest -q                          # full test suite (83 tests, about 50 s)
+pytest -q                          # full test suite (124 tests, about 55 s)
 python scripts/run_kuhn_cfr.py     # vanilla CFR on Kuhn, 100k iters -> analysis/kuhn_cfr.csv
 python -m play.cli --game kuhn --seed 1 --hands 5   # play the bot in the terminal
 ```
@@ -62,6 +63,12 @@ Each row lists the command that reproduces it; the source csv is in `analysis/`.
 | Leduc exploitability (mbb/hand), last checkpoint within 140 s: CFR / CFR+ / MCCFR | 12.26 / 0.0254 / 12.61 | `python scripts/leduc_benchmark.py && python analysis/plot_leduc.py` |
 | Exploiter (exact BR) vs bots, mbb/hand ±95% CI, 300k hands each | call +1470±7, raise +2377±14, tight +697±11, random +2367±18 (equilibrium: +636±7, +327±19, +61±11, +716±13) | `python scripts/bot_matches.py --pairs 150000 --seed 0` |
 | Adaptive agent vs bots, mbb/hand ±95% CI, 40k hands each (cap 1.0 / cap 0.2) | call +1315±19 / +810±20, raise +2194±40 / +632±51, tight +638±36 / +152±32, random +1715±40 / +881±36; vs equilibrium -1±27 / +7±24 | `python scripts/adaptive_matches.py --pairs 20000 --seed 0` |
+| Market-making game: CFR+ exploitability after 2000 iters (deck 10, noise 0.25) | 3.85e-05 | `python scripts/mm_solve.py --iters 2000` |
+| Market-making: MM EV vs informed taker, taker_sees 0/1/2 (vs noise flow) | -0.000 / -0.466 / -1.211 (+1.333) | `python scripts/mm_info.py --iters 1000` |
+| Market-making: max abs(avg mid - E[V given MM card]) | 3.22 (card 2); spread at grid max 4 | `python scripts/mm_quotes.py` |
+| Push/fold (HU NL, stacks 1-20 BB): max exploitability | 9.71e-07 BB/hand (S=15) | `python scripts/pushfold_solve.py` |
+| Push/fold shove% / call% (combo-weighted), S=1 / 10 / 20 | 100.0 / 58.1 / 40.3 ; 100.0 / 37.4 / 21.7 | `python scripts/pushfold_solve.py` |
+| Push/fold equity table: max Monte Carlo std err | 0.0016 | `python scripts/pushfold_equity.py --boards 120000 --validate` |
 <!-- RESULTS_TABLE_END -->
 
 ## Charts

@@ -90,7 +90,7 @@ Pairs are i.i.d. (hands within a pair are not), so the CI is computed over pair 
 **Q&A**
 1. *Why mirror the hands?* The same cards are played from both seats, so the lucky-deal term cancels in the pair mean. Same accuracy needs far fewer hands.
 2. *Why compute the CI over pairs, not hands?* The two hands of a pair share a deal and are correlated. Pair means are independent, so $s/\sqrt n$ over pairs is valid; over hands it would be too narrow.
-3. *Why does equilibrium win less than the exploiter?* Equilibrium guarantees no loss but does not adapt to a bot's mistakes. The best response is tuned to one known bot, so it wins more against it but could lose to others.
+3. *Why does equilibrium win less than the exploiter?* Equilibrium guarantees no expected loss (with seats alternating, since the game is symmetric over seats) but does not adapt to a bot's mistakes. The best response is tuned to one known bot, so it wins more against it but could lose to others.
 
 ## Phase 6: Adaptive agent (online opponent modeling, safe exploitation)
 
@@ -132,7 +132,7 @@ $w$ grows with evidence $n$ and is capped. Both cap 1.0 (-0.8±27.2 mbb/hand vs 
 $$\text{ask}=\mathbb{E}[V\mid \text{taker buys}],\qquad \text{bid}=\mathbb{E}[V\mid \text{taker sells}].$$
 A buy is evidence of a high taker card, so ask $>\mathbb{E}[V]$; a sell gives bid $<\mathbb{E}[V]$. The gap ask - bid is the *adverse-selection* cost: the MM loses to informed flow and recoups it from noise flow. Spread rises with the informed share of flow.
 
-**What we observed (not what theory predicts).** In this solved game the MM picks the widest spread (4) in every configuration, so spread did *not* widen with `taker_sees`; it sits at the grid ceiling. Mids sit on coarse grid points (mostly 17) so they only weakly track $\mathbb{E}[V\mid\text{MM card}]$ (13..20). What does move: MM EV vs informed flow is 0 / -0.466 / -1.211 for `taker_sees` 0/1/2, vs noise flow +1.333 always, so adverse selection grows with taker information. In the 2-round variant the round-2 mid is higher after a buy than after a sell for every card, the Glosten-Milgrom direction. Numbers: `analysis/mm_game_*.csv`.
+**What we observed (not what theory predicts).** In the CFR+ solution the MM picks the widest spread (4) in every configuration, so spread did *not* widen with `taker_sees`; it sits at the grid ceiling. Mids sit on coarse grid points (mostly 17) so they only weakly track $\mathbb{E}[V\mid\text{MM card}]$ (13..20). What does move: MM EV vs informed flow is 0 / -0.466 / -1.211 for `taker_sees` 0/1/2, vs noise flow +1.333 always, so adverse selection grows with taker information. In the 2-round variant the round-2 mid is higher after a buy than after a sell for every card, the Glosten-Milgrom direction. Numbers: `analysis/mm_game_*.csv`.
 
 **Q&A**
 1. *Why do you need noise traders?* Without them every trade is against an informed counterparty, so the MM's best quote is to not trade. Noise flow is the revenue that pays for adverse selection.

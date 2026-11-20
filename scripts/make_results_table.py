@@ -1,4 +1,4 @@
-"""Build README results table from analysis/*.csv; insert between markers.
+"""Build the results table (README.md + analysis/writeup.md) from analysis/*.csv; insert between markers.
 
 Every row carries its reproduce command. Run: python scripts/make_results_table.py
 """
@@ -87,11 +87,40 @@ def build():
         "| Exploiter (exact BR) vs bots, mbb/hand ±95%% CI, %dk hands each | %s (equilibrium: %s) | `python scripts/bot_matches.py --pairs 150000 --seed 0` |" % (int(nb) // 1000, ex, eq),
         "| Adaptive agent vs bots, mbb/hand ±95%% CI, %dk hands each (cap 1.0 / cap 0.2) | %s; vs equilibrium %s | `python scripts/adaptive_matches.py --pairs 20000 --seed 0` |" % (int(na) // 1000, ad, ade),
     ]
+    L += mm_rows() + pushfold_rows()
     return "\n".join(L)
 
 
-def main():
-    p = os.path.join(ROOT, "README.md")
+def mm_rows():
+    ex = float(rd("mm_game_convergence.csv")[-1]["exploitability"])
+    it = rd("mm_game_convergence.csv")[-1]["iter"]
+    q = rd("mm_game_quotes.csv")
+    dev = max(q, key=lambda r: abs(float(r["avg_mid"]) - float(r["E_V_given_mm_card"])))
+    d = abs(float(dev["avg_mid"]) - float(dev["E_V_given_mm_card"]))
+    info = [r for r in rd("mm_game_info.csv") if float(r["noise"]) == 0.25]
+    inf = " / ".join("%.3f" % float(r["mm_ev_informed"]) for r in info)
+    noise = float(info[0]["mm_ev_noise"])
+    return [
+        "| Market-making game: CFR+ exploitability after %s iters (deck 10, noise 0.25) | %.2e | `python scripts/mm_solve.py --iters %s` |" % (it, ex, it),
+        "| Market-making: MM EV vs informed taker, taker_sees 0/1/2 (vs noise flow) | %s (%+.3f) | `python scripts/mm_info.py --iters 1000` |" % (inf, noise),
+        "| Market-making: max abs(avg mid - E[V given MM card]) | %.2f (card %s); spread at grid max 4 | `python scripts/mm_quotes.py` |" % (d, dev["mm_card"]),
+    ]
+
+
+def pushfold_rows():
+    s = rd("pushfold_summary.csv")
+    by = {int(r["stack"]): r for r in s}
+    mx = max(s, key=lambda r: float(r["exploitability_bb"]))
+    se = float(np.load(os.path.join(ROOT, "analysis", "pushfold_equity.npz"))["se"].max())
+    return [
+        "| Push/fold (HU NL, stacks 1-20 BB): max exploitability | %.2e BB/hand (S=%s) | `python scripts/pushfold_solve.py` |" % (float(mx["exploitability_bb"]), mx["stack"]),
+        "| Push/fold shove%% / call%% (combo-weighted), S=1 / 10 / 20 | %s / %s / %s ; %s / %s / %s | `python scripts/pushfold_solve.py` |" % tuple(
+            "%.1f" % float(by[k][c]) for c in ("shove_pct", "call_pct") for k in (1, 10, 20)),
+        "| Push/fold equity table: max Monte Carlo std err | %.4f | `python scripts/pushfold_equity.py --boards 120000 --validate` |" % se,
+    ]
+
+
+def write(p, table):
     text = open(p).read()
     if START not in text or END not in text:
         # first run: replace existing table (header row through last table row) with markers
@@ -103,9 +132,15 @@ def main():
         lines[i:j + 1] = [START, END]
         text = "\n".join(lines)
     a, b = text.index(START) + len(START), text.index(END)
-    text = text[:a] + "\n" + build() + "\n" + text[b:]
+    text = text[:a] + "\n" + table + "\n" + text[b:]
     open(p, "w").write(text)
-    print("README results table updated (7 rows)")
+
+
+def main():
+    t = build()
+    for name in ("README.md", os.path.join("analysis", "writeup.md")):
+        write(os.path.join(ROOT, name), t)
+    print("results table updated in README.md and analysis/writeup.md (%d rows)" % (t.count("\n") - 1))
 
 
 if __name__ == "__main__":
