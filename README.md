@@ -73,9 +73,16 @@ Kuhn exploitability vs iterations (log-log), vanilla CFR and CFR+.
 
 Leduc exploitability (mbb/hand) vs wall-clock time (log scale): vanilla CFR, CFR+, external-sampling MCCFR.
 
+## Market-making game
+Zero-sum card game: MM quotes (mid, spread) knowing one card; taker (informed or, w.p. 0.25, noise) buys/sells/passes; value = sum of 3 cards. Solved with CFR+ (exploitability 3.85e-05 at 2000 iters). Noise traders are needed, otherwise the MM never trades. Observed: MM always quotes the widest spread (4), so spread did not widen with taker information; MM loses more to informed flow as `taker_sees` rises (EV vs informed 0 / -0.466 / -1.211) and earns +1.333 vs noise. Mids only weakly track E[V | card] on this coarse grid (max deviation 3.22). Numbers and commands: [analysis/results.md](analysis/results.md); notes in [LEARNING.md](LEARNING.md).
+
+![MM quotes](analysis/mm_game_quotes.png)
+
+![MM info sweep](analysis/mm_game_info.png)
+
 ## Roadmap
 - [x] Phases 1–8: Kuhn/Leduc CFR, CFR+, MCCFR, exploitability, bots, adaptive agent, terminal play, writeup
-- [ ] Phase 9: market-making card game (MM quotes bid/ask, informed + noise taker) solved with CFR+ — quotes vs private card, spread vs taker information, adverse selection
+- [~] Phase 9 (docs done, verify pending): market-making card game (MM quotes bid/ask, informed + noise taker) solved with CFR+ — quotes vs private card, spread vs taker information, adverse selection
 - [ ] Phase 10: heads-up no-limit push/fold solver (169x169 equity table, equilibrium for 1–20 BB stacks, range charts, query tool)
 
 ## What I learned

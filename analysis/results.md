@@ -100,3 +100,19 @@ Adaptive (cap 1.0 and safe cap 0.2) vs 4 bots + equilibrium, 40k mirrored hands 
 Reproduce: `python scripts/verify_phase6.py` (reads the csv above) and `pytest -q tests/test_adaptive.py`
 
 PASS: both caps beat equilibrium vs every bot (adaptive CI lower bound > equilibrium CI upper bound) and both have CI lower bound > -50 mbb/hand vs equilibrium (cap 1.0: -28.0, cap 0.2: -17.6). Leakage test: decisions identical when the opponent's card in the state is scrambled.
+
+## Market-making game (Phase 9)
+
+Game: deck 10, mids (8,11,14,17,20), spreads (1,2,4), taker_sees 1, noise_prob 0.25. Noise traders are required (informed-only zero-sum taker => MM quotes widest spread, no trade).
+
+| Result | Value | Source | Command |
+|---|---|---|---|
+| CFR+ exploitability, 2000 iters (232 s) | 3.85e-05 | analysis/mm_game_convergence.csv (last row) | `python scripts/mm_solve.py --iters 2000` |
+| max abs(avg mid - E[V given MM card]) | 3.22 (card 10: 17.0 vs 20.0); MM spread 4 for every card | analysis/mm_game_quotes.csv | `python scripts/mm_quotes.py` |
+| Avg spread, taker_sees 0/1/2 (noise 0.25) | 3.9988 / 3.9999 / 3.9999 (flat at grid max; no widening observed) | analysis/mm_game_info.csv | `python scripts/mm_info.py --iters 1000` |
+| Trade rate, taker_sees 0/1/2 (noise 0.25) | 0.177 / 0.508 / 0.633 | analysis/mm_game_info.csv | `python scripts/mm_info.py --iters 1000` |
+| MM EV vs informed flow, taker_sees 0/1/2 | -0.000 / -0.466 / -1.211 | analysis/mm_game_info.csv | `python scripts/mm_info.py --iters 1000` |
+| MM EV vs noise flow (all configs) | +1.333 | analysis/mm_game_info.csv | `python scripts/mm_info.py --iters 1000` |
+| Max exploitability over the 6 info configs | 1.67e-04 | analysis/mm_game_info.csv | `python scripts/mm_info.py --iters 1000` |
+| 2-round (deck 6): round-2 mid after buy vs sell, MM card 5 | 11.67 vs 10.67 | analysis/mm_game_2round.csv | `python scripts/mm_2round.py` |
+| 2-round exploitability, 1000 iters | 9.61e-05 | `python scripts/mm_2round.py` output (P9.6 log) | `python scripts/mm_2round.py` |

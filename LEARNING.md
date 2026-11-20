@@ -121,3 +121,20 @@ $w$ grows with evidence $n$ and is capped. Both cap 1.0 (-0.8±27.2 mbb/hand vs 
 1. *Why alternate seats?* Kuhn is asymmetric (P1 value $-1/18$, P2 $+1/18$). Alternating removes positional luck from the running total.
 2. *Why show the bot probabilities?* Equilibrium play is mixed; printed $\bar\sigma$ shows why one bluff or call is not wrong and makes the bot auditable.
 3. *Can the human beat it?* Not in expectation: exploitability is near 0, so gains over many hands are variance, not skill.
+
+## Phase 9: Market-making card game
+
+**What it does.** `games/market_making.py` is a small zero-sum game solved with CFR+. Cards 1..10 are dealt without replacement: MM card, taker card, one hidden card; the asset value is $V=$ sum of the three. The MM picks a quote (mid, spread) from a grid (mids 8..20 step 3, spreads 1/2/4), so bid $=m-s/2$, ask $=m+s/2$. The taker sees the quote and its own card (`taker_sees=1`), and buys, sells or passes. With prob. `noise_prob` (0.25 default) the taker is instead a noise trader who picks buy/sell/pass uniformly. Buy pays taker $V-\text{ask}$, sell pays taker $\text{bid}-V$, MM gets the negative.
+
+**Why noise traders.** With only an informed zero-sum taker, the taker trades only when it has an edge, so MM's best response is the widest spread (no trade, EV 0). Noise flow trades regardless of value and pays the spread, so MM can earn from it. All results use `noise_prob` > 0 and say so.
+
+**Key math (Glosten-Milgrom).** A competitive MM sets
+$$\text{ask}=\mathbb{E}[V\mid \text{taker buys}],\qquad \text{bid}=\mathbb{E}[V\mid \text{taker sells}].$$
+A buy is evidence of a high taker card, so ask $>\mathbb{E}[V]$; a sell gives bid $<\mathbb{E}[V]$. The gap ask - bid is the *adverse-selection* cost: the MM loses to informed flow and recoups it from noise flow. Spread rises with the informed share of flow.
+
+**What we observed (not what theory predicts).** In this solved game the MM picks the widest spread (4) in every configuration, so spread did *not* widen with `taker_sees`; it sits at the grid ceiling. Mids sit on coarse grid points (mostly 17) so they only weakly track $\mathbb{E}[V\mid\text{MM card}]$ (13..20). What does move: MM EV vs informed flow is 0 / -0.466 / -1.211 for `taker_sees` 0/1/2, vs noise flow +1.333 always, so adverse selection grows with taker information. In the 2-round variant the round-2 mid is higher after a buy than after a sell for every card, the Glosten-Milgrom direction. Numbers: `analysis/mm_game_*.csv`.
+
+**Q&A**
+1. *Why do you need noise traders?* Without them every trade is against an informed counterparty, so the MM's best quote is to not trade. Noise flow is the revenue that pays for adverse selection.
+2. *What is adverse selection here?* Conditioning on "taker bought" shifts the posterior of $V$ up. An MM quoting $\mathbb{E}[V]$ loses on buys and sells to informed flow; widening the spread or shading the mid after a trade compensates.
+3. *Your spread did not widen with taker information. Why?* The grid max (4) already gives the best EV in all configs, so the MM is at the ceiling; the effect shows up in trade rate (0.18 -> 0.51 -> 0.63) and MM EV vs informed flow instead. A wider grid would be needed to test the prediction.
