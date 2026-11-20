@@ -73,5 +73,10 @@ Kuhn exploitability vs iterations (log-log), vanilla CFR and CFR+.
 
 Leduc exploitability (mbb/hand) vs wall-clock time (log scale): vanilla CFR, CFR+, external-sampling MCCFR.
 
+## Roadmap
+- [x] Phases 1–8: Kuhn/Leduc CFR, CFR+, MCCFR, exploitability, bots, adaptive agent, terminal play, writeup
+- [ ] Phase 9: market-making card game (MM quotes bid/ask, informed + noise taker) solved with CFR+ — quotes vs private card, spread vs taker information, adverse selection
+- [ ] Phase 10: heads-up no-limit push/fold solver (169x169 equity table, equilibrium for 1–20 BB stacks, range charts, query tool)
+
 ## What I learned
 Detailed notes per phase in [LEARNING.md](LEARNING.md). Raw results and reproduce commands in [analysis/results.md](analysis/results.md).

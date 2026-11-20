@@ -25,12 +25,29 @@ games/ (base.py, kuhn.py, leduc.py) · solvers/ (cfr.py, cfr_plus.py, mccfr.py) 
 6. Adaptive agent: models opponent online, safely shifts from equilibrium toward exploitation
 7. Terminal play mode vs the bot, showing its strategy
 8. README + short writeup with results table
+9. Market-making card game solved with CFR+ -> exploitability ~0, quotes track E[V|card], spread vs taker info, adverse selection (spec below)
+10. HU no-limit push/fold solver -> 169x169 equity table, equilibrium per stack 1-20 BB, exploitability ~0, range charts, query tool (spec below)
 
 ## Pitfalls to watch
 Use the AVERAGE strategy, not the current one · info-set keys contain only what the player can see · weight chance nodes by probability · head-to-head results need many hands + CIs · never claim "solved poker"
 
-## Add-ons (after phase 8)
-No-limit push/fold solver checked against published charts · CFR on a card-sum market-making game · analysis of my own tournament hand histories · precomputed strategy tables for <1ms decisions (No Limit tournament)
+## Phase 9 spec — market-making card game
+- games/market_making.py implements Game. Cards 1..N (default 10) dealt w/o replacement: MM card, taker card, 1 hidden card. V = sum of 3 cards.
+- MM picks (mid, spread) from a small grid -> bid = mid - s/2, ask = mid + s/2. Taker sees quote, picks buy/sell/pass. Taker buy: taker +V-ask, MM -(V-ask); sell: taker +bid-V. Zero-sum, 1 unit.
+- Config: deck size, mid grid, spread grid, taker_sees in {0,1,2} (0 = nothing, 1 = own card, 2 = own + hidden), noise_prob (chance: taker is a noise trader who buys/sells/passes uniformly), rounds in {1,2}.
+- Why noise: with only an informed zero-sum taker, MM's best quote is the widest spread (no trade). Noise flow pays the spread (Glosten-Milgrom). Report results for noise_prob > 0 and say so.
+- Solve with existing CFR+/eval.exploitability. Keep tree small (1-round default ~10^5 nodes); 2-round uses a smaller deck/grid.
+- Done when: exploitability ~0; avg mid per MM card near E[V | MM card]; spread vs taker_sees reported (expected to widen); MM loss vs informed vs uninformed taker; analysis/mm_game*.csv + plots; tests; LEARNING.md (Glosten-Milgrom, adverse selection); README section. No overclaims.
+
+## Phase 10 spec — HU no-limit push/fold
+- SB shoves or folds; BB calls or folds; blinds 0.5/1; effective stack S in 1..20 BB. Payoffs (SB, in BB): fold -0.5; shove/fold +1; shove/call S*(2*eq-1).
+- 169 hand classes (13 pairs x6 combos, 78 suited x4, 78 offsuit x12). Equity table 169x169 combo-weighted with card removal; joint weight w[i][j] = # non-conflicting combo pairs. Evaluator: eval7 (fallback treys). Cache to analysis/pushfold_equity.npz.
+- Solve per stack (vectorized CFR+ or fictitious play over classes); exploitability via best response, in BB.
+- Outputs: 13x13 range charts, shove%/call% vs stack plot, `python -m play.pushfold --stack 10 --hand AJo`.
+- Verify: exploitability ~0; ranges widen as S shrinks; very short stacks shove nearly all. External chart comparison ONLY if a source is actually accessed; else write "external comparison pending". Never invent chart values.
+
+## Add-ons (after phase 10)
+Analysis of my own tournament hand histories · precomputed strategy tables for <1ms decisions (No Limit tournament)
 
 ## Token rules (always follow)
 - Be terse. No long explanations in replies; put explanations in LEARNING.md only at the end of a phase.
