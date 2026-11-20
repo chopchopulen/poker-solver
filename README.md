@@ -8,7 +8,7 @@ that shifts from equilibrium play toward exploiting a weak opponent.
 
 All results are verified against known values (e.g. Kuhn poker game value = -1/18 for player 1).
 
-**Status:** Phases 1–8 done (solvers, evaluation, bots, adaptive agent, terminal play, writeup: [analysis/writeup.md](analysis/writeup.md)). See [PROGRESS.md](PROGRESS.md).
+**Status:** Phases 1–10 done (solvers, evaluation, bots, adaptive agent, terminal play, writeup: [analysis/writeup.md](analysis/writeup.md); market-making game; HU push/fold). See [PROGRESS.md](PROGRESS.md).
 
 ## Quickstart
 Requires Python 3.11.
@@ -92,7 +92,7 @@ Query: `python -m play.pushfold --stack 10 --hand AJo`
 ## Roadmap
 - [x] Phases 1–8: Kuhn/Leduc CFR, CFR+, MCCFR, exploitability, bots, adaptive agent, terminal play, writeup
 - [x] Phase 9: market-making card game (MM quotes bid/ask, informed + noise taker) solved with CFR+ — quotes vs private card, spread vs taker information, adverse selection
-- [ ] Phase 10 (docs done, verification pending): heads-up no-limit push/fold solver (169x169 equity table, equilibrium for 1–20 BB stacks, range charts, query tool)
+- [x] Phase 10: heads-up no-limit push/fold solver (169x169 equity table, equilibrium for 1–20 BB stacks, range charts, query tool)
 
 ## What I learned
 Detailed notes per phase in [LEARNING.md](LEARNING.md). Raw results and reproduce commands in [analysis/results.md](analysis/results.md).
