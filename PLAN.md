@@ -18,7 +18,7 @@ Long runs go in scripts/ and write to analysis/*.csv. Tests stay under ~10 s tot
 - [x] P2.3 | sonnet | scripts/kuhn_convergence.py: vanilla CFR to 100k iters, logs exploitability at log-spaced iterations to analysis/kuhn_convergence.csv (solver, iter, seconds, exploitability), one summary line | done when: csv exists and exploitability at last row < at first row
 - [x] P2.4 | haiku | analysis/plot_convergence.py: log-log plot exploitability vs iterations from the csv, saved to analysis/kuhn_convergence.png; add entry to analysis/results.md with exact reproduce command | done when: png exists, results.md entry has command
 - [x] P2.5 | sonnet | Docs: LEARNING.md Phase 2 entry (best response, exploitability, O(1/sqrt(T)) bound in LaTeX, 3 Q&As); README chart + results row | done when: files updated, `pytest -q` passes
-- [ ] P2.6 | opus | VERIFY Phase 2: review best_response.py for infoset aggregation bugs (no peeking at opponent cards), confirm exploitability -> 0, check log-log slope is about -0.5 or better from csv; fix issues; mark Phase 2 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 2 DONE
+- [x] P2.6 | opus | VERIFY Phase 2: review best_response.py for infoset aggregation bugs (no peeking at opponent cards), confirm exploitability -> 0, check log-log slope is about -0.5 or better from csv; fix issues; mark Phase 2 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 2 DONE
 
 ## Phase 3: CFR+
 - [ ] P3.1 | sonnet | solvers/cfr_plus.py: regrets floored at 0 (regret-matching+), alternating updates, linearly weighted average strategy | done when: tests pass: Kuhn value within 0.005 of -1/18 after 1000 iters, exploitability < vanilla CFR at same iters
