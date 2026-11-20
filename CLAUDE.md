@@ -32,3 +32,10 @@ Use the AVERAGE strategy, not the current one · info-set keys contain only what
 ## Add-ons (after phase 8)
 No-limit push/fold solver checked against published charts · CFR on a card-sum market-making game · analysis of my own tournament hand histories · precomputed strategy tables for <1ms decisions (No Limit tournament)
 
+## Token rules (always follow)
+- Be terse. No long explanations in replies; put explanations in LEARNING.md only at the end of a phase.
+- Never print or cat large files or logs. Use `head -20` / `tail -20`, or grep for what you need.
+- Tests must run in under ~10 seconds: use small iteration counts in tests. Long runs (e.g. 100k CFR iterations) go to a script that writes results to analysis/*.csv; read only the summary line.
+- Use `pytest -q` and keep program output to one summary line per run.
+- Don't re-read files you already read this session unless they changed.
+- Don't refactor or polish working code. Finish the phase, commit, stop.
