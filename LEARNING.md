@@ -110,3 +110,14 @@ $w$ grows with evidence $n$ and is capped. Both cap 1.0 (-0.8±27.2 mbb/hand vs 
 1. *Why center the prior on equilibrium?* With little data the agent should not overreact; it plays equilibrium (unexploitable) and only deviates as evidence accumulates.
 2. *Why cap the exploitation weight?* A best response to a wrong model can be exploited. The cap bounds the worst-case loss at the price of lower profit vs weak bots.
 3. *How do you know it doesn't cheat?* The model updates only from public history, the board and the agent's own card; the opponent's private card is never an input. `test_no_leakage_of_opponent_card` scrambles the opponent's card in the state passed to the agent and checks that every decision is unchanged.
+
+## Phase 7: Terminal play mode
+
+**What it does.** `python -m play.cli` lets a human play Kuhn or Leduc against the equilibrium bot. The bot samples its move from the stored average strategy and prints those probabilities, so you can see it mix. Seats alternate; a running chip total is shown. Input/output are injectable so tests script whole hands.
+
+**Key math.** Bot plays $a\sim\bar\sigma(\cdot\mid I)$, $I$ = its info set (own card, board, public history only). Since $\bar\sigma$ is an approximate equilibrium, the human expects at most the game value of their seat: Kuhn $-\tfrac{1}{18}$ as player 1, $+\tfrac{1}{18}$ as player 2, about $0$ over alternating seats.
+
+**Q&A**
+1. *Why alternate seats?* Kuhn is asymmetric (P1 value $-1/18$, P2 $+1/18$). Alternating removes positional luck from the running total.
+2. *Why show the bot probabilities?* Equilibrium play is mixed; printed $\bar\sigma$ shows why one bluff or call is not wrong and makes the bot auditable.
+3. *Can the human beat it?* Not in expectation: exploitability is near 0, so gains over many hands are variance, not skill.

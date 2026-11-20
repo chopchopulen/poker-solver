@@ -44,6 +44,15 @@ Kuhn poker: 3 cards, ante 1, one bet of 1. Vanilla CFR keeps cumulative regret p
 
 Evaluation: exact best response and exploitability (reported in mbb/hand for Leduc).
 
+## Play against the bot
+
+```bash
+python -m play.cli --game kuhn --seed 1 --hands 5
+python -m play.cli --game leduc --seed 1 --hands 5
+```
+
+You face the CFR+ equilibrium bot (average strategy from `analysis/strategies/`). Seats alternate each hand. Kuhn moves: `p` pass/check/fold, `b` bet/call. Leduc moves: `c` check/call, `r` raise. After each bot move the CLI prints the bot's action probabilities at that infoset, plus a running chip total.
+
 ## Results
 Every number below will link to the exact command that reproduces it (see `analysis/results.md`).
 
