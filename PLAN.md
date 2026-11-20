@@ -48,7 +48,7 @@ Long runs go in scripts/ and write to analysis/*.csv. Tests stay under ~10 s tot
 ## Phase 6: Adaptive agent
 - [x] P6.1 | sonnet | agents/adaptive.py: online opponent model (Dirichlet counts per opponent infoset-visible situation, prior centered on equilibrium), best response to the model mixed with equilibrium by a confidence weight that grows with observations | done when: tests pass: with no observations it plays equilibrium; after many always-call hands its strategy moves toward the exploiter's
 - [x] P6.2 | sonnet | Safety: cap exploitation weight so loss vs an equilibrium opponent stays small; test adaptive vs equilibrium agent over mirrored hands | done when: test passes: adaptive vs equilibrium CI lower bound > -50 mbb/hand (Leduc)
-- [ ] P6.3 | sonnet | scripts/adaptive_matches.py: adaptive vs each bot and vs equilibrium, write analysis/adaptive_matches.csv with CIs and compare to exploiter + equilibrium rows; results.md entry with command | done when: csv complete
+- [x] P6.3 | sonnet | scripts/adaptive_matches.py: adaptive vs each bot and vs equilibrium, write analysis/adaptive_matches.csv with CIs and compare to exploiter + equilibrium rows; results.md entry with command | done when: csv complete
 - [ ] P6.4 | sonnet | Docs: LEARNING.md Phase 6 entry (opponent modeling, safe exploitation trade-off, LaTeX, 3 Q&As); README adaptive row | done when: files updated, `pytest -q` passes
 - [ ] P6.5 | opus | VERIFY Phase 6: review adaptive.py for leakage (model must use only what the agent observes), check win rates beat equilibrium vs weak bots and stay safe vs equilibrium; mark Phase 6 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 6 DONE
 

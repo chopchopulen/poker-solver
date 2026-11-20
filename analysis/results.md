@@ -88,3 +88,9 @@ Reproduce: `python scripts/verify_phase5.py` (about 5 s)
 Expected: `phase5 verify: br_gap=0.0e+00 csv_rows=8 outside_ci=0 ci_coverage=0.96 (100x1000 pairs) -> PASS`
 
 Checks: exploiter exact EV equals game_value of its pure policy; all 8 exact EVs inside simulated 95% CIs; chance cards identical across seatings for a fixed seed; empirical CI coverage over 100 independent matches. `python scripts/bot_matches.py --pairs 150000 --seed 0` reproduces `analysis/bot_matches.csv` byte-identically.
+
+## Adaptive agent matches (P6.3)
+
+Reproduce: `python scripts/adaptive_matches.py --pairs 20000 --seed 0` (about 5.5 min)
+
+Adaptive (cap 1.0 and safe cap 0.2) vs 4 bots + equilibrium, 40k mirrored hands each, mbb/hand with 95% CI, in `analysis/adaptive_matches.csv` alongside equilibrium and exploiter rows (300k hands, copied from bot_matches.csv). Cap 1.0: always_call 1383, always_raise 2304, tight 303, random 2233, vs equilibrium -170 +/- 50 (exploitable). Cap 0.2: 810 / 687 / 24 / 966, vs equilibrium -44 +/- 27.
