@@ -91,3 +91,20 @@ Pairs are i.i.d. (hands within a pair are not), so the CI is computed over pair 
 1. *Why mirror the hands?* The same cards are played from both seats, so the lucky-deal term cancels in the pair mean. Same accuracy needs far fewer hands.
 2. *Why compute the CI over pairs, not hands?* The two hands of a pair share a deal and are correlated. Pair means are independent, so $s/\sqrt n$ over pairs is valid; over hands it would be too narrow.
 3. *Why does equilibrium win less than the exploiter?* Equilibrium guarantees no loss but does not adapt to a bot's mistakes. The best response is tuned to one known bot, so it wins more against it but could lose to others.
+
+## Phase 6: Adaptive agent (online opponent modeling, safe exploitation)
+
+**What it does.** The agent watches the opponent's public actions, builds a model of the opponent's strategy, computes a best response to that model, and plays a blend of equilibrium and that best response. The model only uses what the agent sees (public betting history and board), never the opponent's hidden card.
+
+**Opponent model.** For each public situation $h$, count opponent actions $c_h(a)$, $n_h=\sum_a c_h(a)$. Dirichlet posterior mean, prior centered on the equilibrium $\sigma^*$ with strength $\alpha_0$:
+$$\hat\sigma(a\mid h)=\frac{\alpha_0\,\sigma^*(a\mid h)+c_h(a)}{\alpha_0+n_h}$$
+With no data $\hat\sigma=\sigma^*$. Counts are pooled over the opponent's hidden cards, so a card-dependent opponent is approximated by its marginal action frequencies.
+
+**Safe exploitation.** Let $\beta$ = best response to $\hat\sigma$. Play
+$$\sigma=(1-w)\,\sigma^*+w\,\beta,\qquad w=\min\left(\text{cap},\frac{n}{n+K}\right)$$
+$w$ grows with evidence $n$ and is capped. Cap 1.0 maximizes exploitation but is itself exploitable (-170±50 mbb/hand vs equilibrium); cap 0.2 loses only -44±27 vs equilibrium while still beating equilibrium's winnings vs call/raise/random bots (`analysis/adaptive_matches.csv`). Trade-off: higher $w$ = more profit vs weak bots, more loss vs a strong opponent.
+
+**Q&A**
+1. *Why center the prior on equilibrium?* With little data the agent should not overreact; it plays equilibrium (unexploitable) and only deviates as evidence accumulates.
+2. *Why cap the exploitation weight?* A best response to a wrong model can be exploited. The cap bounds the worst-case loss at the price of lower profit vs weak bots.
+3. *How do you know it doesn't cheat?* The model updates only from public history after each hand (`observe_end`); the opponent's private card is never an input.
