@@ -4,7 +4,7 @@ Task queue for overnight.sh. Format: `- [ ] ID | model | task | done when: check
 Long runs go in scripts/ and write to analysis/*.csv. Tests stay under ~10 s total.
 
 ## Phase 1: Kuhn + vanilla CFR
-- [ ] P1.1 | haiku | Scaffold: add __init__.py to games/ solvers/ eval/ agents/ play/ tests/; add scripts/ dir; requirements.txt (numpy, pytest, matplotlib); pytest.ini with testpaths=tests; tests/test_smoke.py that imports every package | done when: `pytest -q` passes
+- [x] P1.1 | haiku | Scaffold: add __init__.py to games/ solvers/ eval/ agents/ play/ tests/; add scripts/ dir; requirements.txt (numpy, pytest, matplotlib); pytest.ini with testpaths=tests; tests/test_smoke.py that imports every package | done when: `pytest -q` passes
 - [ ] P1.2 | sonnet | games/base.py: abstract Game class with initial_state, is_terminal, is_chance, chance_outcomes (action, prob), current_player, legal_actions, next_state, utility(state, player), infoset_key(state, player); docstrings on each | done when: test that a subclass missing a method cannot be instantiated passes
 - [ ] P1.3 | sonnet | games/kuhn.py implementing Game (3 cards, ante 1, bet 1, histories p/b); tests: 6 equally likely deals, every terminal payoff hand-checked against Kuhn rules, infoset key contains only own card + public history | done when: `pytest -q` passes
 - [ ] P1.4 | sonnet | solvers/cfr.py: vanilla CFR, full tree traversal, chance nodes weighted by probability, regret matching, average strategy weighted by own reach; eval/game_value.py computes expected value of a strategy profile | done when: test that 2000 iterations gives P1 value within 0.005 of -1/18 passes
