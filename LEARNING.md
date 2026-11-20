@@ -126,7 +126,7 @@ $w$ grows with evidence $n$ and is capped. Both cap 1.0 (-0.8±27.2 mbb/hand vs 
 
 **What it does.** `games/market_making.py` is a small zero-sum game solved with CFR+. Cards 1..10 are dealt without replacement: MM card, taker card, one hidden card; the asset value is $V=$ sum of the three. The MM picks a quote (mid, spread) from a grid (mids 8..20 step 3, spreads 1/2/4), so bid $=m-s/2$, ask $=m+s/2$. The taker sees the quote and its own card (`taker_sees=1`), and buys, sells or passes. With prob. `noise_prob` (0.25 default) the taker is instead a noise trader who picks buy/sell/pass uniformly. Buy pays taker $V-\text{ask}$, sell pays taker $\text{bid}-V$, MM gets the negative.
 
-**Why noise traders.** With only an informed zero-sum taker, the taker trades only when it has an edge, so MM's best response is the widest spread (no trade, EV 0). Noise flow trades regardless of value and pays the spread, so MM can earn from it. All results use `noise_prob` > 0 and say so.
+**Why noise traders.** With only an informed zero-sum taker, the taker trades only when it has an edge, so MM's EV is at most 0 and its best response is the widest spread available (with an unbounded spread grid: no trade, EV 0; on our capped grid the informed taker still trades when its edge exceeds half the spread). Noise flow trades regardless of value and pays the spread, so MM can earn from it. All results use `noise_prob` > 0 and say so.
 
 **Key math (Glosten-Milgrom).** A competitive MM sets
 $$\text{ask}=\mathbb{E}[V\mid \text{taker buys}],\qquad \text{bid}=\mathbb{E}[V\mid \text{taker sells}].$$

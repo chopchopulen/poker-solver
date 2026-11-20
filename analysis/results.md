@@ -103,7 +103,7 @@ PASS: both caps beat equilibrium vs every bot (adaptive CI lower bound > equilib
 
 ## Market-making game (Phase 9)
 
-Game: deck 10, mids (8,11,14,17,20), spreads (1,2,4), taker_sees 1, noise_prob 0.25. Noise traders are required (informed-only zero-sum taker => MM quotes widest spread, no trade).
+Game: deck 10, mids (8,11,14,17,20), spreads (1,2,4), taker_sees 1, noise_prob 0.25. Noise traders are required (informed-only zero-sum taker => MM EV <= 0, quotes widest spread; no trade only if spread is unbounded).
 
 | Result | Value | Source | Command |
 |---|---|---|---|
