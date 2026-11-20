@@ -65,3 +65,12 @@ def test_moves_toward_exploiter_after_always_call():
         f = {k: v for k, v in freqs(ag).items() if k in tgt and opp_only_calls(k, seat)}
         tgt = {k: tgt[k] for k in f}
         assert dist_to(f, tgt) < dist_to(f, EQ)
+
+
+def test_safe_vs_equilibrium():
+    """Capped exploitation weight => adaptive loses < 50 mbb/hand (95% CI lower bound) to equilibrium.
+    Needs ~16k mirrored pairs for a CI this tight (Leduc pair std ~2.2 chips); ~25s, deterministic seeds."""
+    from agents.equilibrium import EquilibriumAgent
+    from eval.match import play_match
+    r = play_match(G, AdaptiveAgent(G, EQ, seed=1, cap=0.2), EquilibriumAgent(EQ, seed=2), 16000, seed=5)
+    assert r["lo_mbb"] > -50, r
