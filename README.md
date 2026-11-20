@@ -8,26 +8,22 @@ that shifts from equilibrium play toward exploiting a weak opponent.
 
 All results are verified against known values (e.g. Kuhn poker game value = -1/18 for player 1).
 
-**Status:** Phase 1 (Kuhn + vanilla CFR) in progress; vanilla CFR on Kuhn works. See [PROGRESS.md](PROGRESS.md).
+**Status:** Phases 1–7 done (solvers, evaluation, bots, adaptive agent, terminal play). Phase 8 (writeup) in progress. See [PROGRESS.md](PROGRESS.md).
 
 ## Quickstart
 Requires Python 3.11.
 
 ```bash
-pip install numpy pytest matplotlib
-pytest -q
+pip install -r requirements.txt
+pytest -q                          # full test suite (under ~10 s)
+python scripts/run_kuhn_cfr.py     # vanilla CFR on Kuhn, 100k iters -> analysis/kuhn_cfr.csv
+python -m play.cli --game kuhn --seed 1 --hands 5   # play the bot in the terminal
 ```
 
-Run vanilla CFR on Kuhn (100k iterations, writes `analysis/kuhn_cfr.csv`, prints game value):
-
-```bash
-python scripts/run_kuhn_cfr.py
-```
-
-Other solver, evaluation, and play commands will be added here as each phase lands.
+Every result in the table below has its reproduce command next to it. Full command list and per-result notes: [analysis/results.md](analysis/results.md). Math notes and Q&As per phase: [LEARNING.md](LEARNING.md).
 
 ## Kuhn + CFR
-Kuhn poker: 3 cards, ante 1, one bet of 1. Vanilla CFR keeps cumulative regret per information set, plays by regret matching, and the reach-weighted *average* strategy converges to Nash. The result lies in the known equilibrium family (P1 bets J with $\alpha\in[0,1/3]$, K with $3\alpha$; our run gives $\alpha\approx0.21$). Math in [LEARNING.md](LEARNING.md).
+Kuhn poker: 3 cards, ante 1, one bet of 1. Vanilla CFR keeps cumulative regret per information set, plays by regret matching, and the reach-weighted *average* strategy converges to Nash. The result lies in the known equilibrium family (P1 bets J with $\alpha\in[0,1/3]$, K with $3\alpha$; our run gives $\alpha\approx0.21$, the `p_bet` of infoset `0` in [analysis/kuhn_cfr.csv](analysis/kuhn_cfr.csv)). Math in [LEARNING.md](LEARNING.md).
 
 ## Games
 | Game  | Deck | Rounds | Notes |
@@ -54,7 +50,7 @@ python -m play.cli --game leduc --seed 1 --hands 5
 You face the CFR+ equilibrium bot (average strategy from `analysis/strategies/`). Seats alternate each hand. Kuhn moves: `p` pass/check/fold, `b` bet/call. Leduc moves: `c` check/call, `r` raise. After each bot move the CLI prints the bot's action probabilities at that infoset, plus a running chip total.
 
 ## Results
-Every number below will link to the exact command that reproduces it (see `analysis/results.md`).
+Each row lists the command that reproduces it; the source csv is in `analysis/`. Details in [analysis/results.md](analysis/results.md).
 
 <!-- RESULTS_TABLE_START -->
 | Metric | Value | Command |
@@ -63,7 +59,7 @@ Every number below will link to the exact command that reproduces it (see `analy
 | Kuhn exploitability after 100000 iters (vanilla CFR) | 6.76e-04 (log-log slope -0.544, T>=10k) | `python scripts/kuhn_convergence.py --solver cfr && python analysis/plot_convergence.py` |
 | Kuhn exploitability after 100000 iters (CFR+) | 2.14e-06 (log-log slope -0.849, T>=10k) | `python scripts/kuhn_convergence.py --solver cfr_plus && python analysis/plot_convergence.py` |
 | CFR+ speedup vs vanilla (iters to expl < 0.001) | 331x (43080 vs 130 iters) | `python scripts/kuhn_convergence.py --solver cfr && python scripts/kuhn_convergence.py --solver cfr_plus` |
-| Leduc exploitability (mbb/hand) at 140 s: CFR / CFR+ / MCCFR | 12.25 / 0.0254 / 12.61 | `python scripts/leduc_benchmark.py && python analysis/plot_leduc.py` |
+| Leduc exploitability (mbb/hand) at 140 s: CFR / CFR+ / MCCFR | 12.26 / 0.0254 / 12.61 | `python scripts/leduc_benchmark.py && python analysis/plot_leduc.py` |
 | Exploiter (exact BR) vs bots, mbb/hand ±95% CI, 300k hands each | call +1470±7, raise +2377±14, tight +697±11, random +2367±18 (equilibrium: +636±7, +327±19, +61±11, +716±13) | `python scripts/bot_matches.py --pairs 150000 --seed 0` |
 | Adaptive agent vs bots, mbb/hand ±95% CI, 40k hands each (cap 1.0 / cap 0.2) | call +1315±19 / +810±20, raise +2194±40 / +632±51, tight +638±36 / +152±32, random +1715±40 / +881±36; vs equilibrium -1±27 / +7±24 | `python scripts/adaptive_matches.py --pairs 20000 --seed 0` |
 <!-- RESULTS_TABLE_END -->
@@ -78,4 +74,4 @@ Kuhn exploitability vs iterations (log-log), vanilla CFR and CFR+.
 Leduc exploitability (mbb/hand) vs wall-clock time (log scale): vanilla CFR, CFR+, external-sampling MCCFR.
 
 ## What I learned
-Detailed notes per phase in [LEARNING.md](LEARNING.md). Summary will be filled in as phases complete.
+Detailed notes per phase in [LEARNING.md](LEARNING.md). Raw results and reproduce commands in [analysis/results.md](analysis/results.md).

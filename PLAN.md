@@ -60,6 +60,6 @@ Long runs go in scripts/ and write to analysis/*.csv. Tests stay under ~10 s tot
 
 ## Phase 8: README + writeup
 - [x] P8.1 | sonnet | scripts/make_results_table.py: builds README results table from analysis/*.csv (every row includes its reproduce command) and inserts it between markers in README.md | done when: script runs, README table filled from csvs
-- [ ] P8.2 | haiku | README polish: real quickstart commands, embed both charts, link LEARNING.md and analysis/results.md | done when: every command in README runs
+- [x] P8.2 | haiku | README polish: real quickstart commands, embed both charts, link LEARNING.md and analysis/results.md | done when: every command in README runs
 - [ ] P8.3 | sonnet | analysis/writeup.md: 1-2 page writeup (method, results table, limits; no "solved poker" claims) plus a short summary using only numbers from csvs | done when: file exists, every number traceable to a csv
 - [ ] P8.4 | opus | VERIFY Phase 8: rerun fast commands from analysis/results.md, confirm numbers match README/writeup, grep for overclaims; mark Phase 8 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 8 DONE
