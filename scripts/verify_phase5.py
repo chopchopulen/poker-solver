@@ -12,6 +12,7 @@ import numpy as np
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
+from agents.base import Agent
 from agents.bots import BOTS
 from agents.exploiter import Exploiter, bot_strategy
 from eval.game_value import game_value
@@ -80,10 +81,7 @@ def main():
     exs = [Exploiter(g, bs, s) for s in (0, 1)]
     exact = 0.5 * (exs[0].value + exs[1].value)
 
-    class Both:
-        def reset(self):
-            pass
-
+    class Both(Agent):
         def act(self, game, state, infoset):
             return exs[game.current_player(state)].act(game, state, infoset)
 

@@ -42,13 +42,13 @@ Expected summary line from the last command: `plot_convergence: 76 pts, cfr slop
 
 ## Leduc: exploitability vs time, all solvers
 
-Source: `analysis/leduc_benchmark.csv` (140 s training budget per solver, last logged point):
+Source: `analysis/leduc_benchmark.csv` (140 s training budget per solver; checkpoints are log-spaced, so the run overshoots the budget). README/writeup use the last checkpoint at or before 140 s; `plot_leduc.py` prints the last logged point.
 
-| solver | final exploitability (mbb/hand) | iterations |
+| solver | last checkpoint <= 140 s: s / mbb/hand / iters | last logged point: s / mbb/hand / iters |
 |---|---|---|
-| vanilla CFR | 12.25 | 7,999 |
-| CFR+ | 0.0154 | 4,740 |
-| MCCFR (external sampling) | 10.51 | 1.17M |
+| vanilla CFR | 110.5 / 12.26 / 6,157 | 143.3 / 12.25 / 7,999 |
+| CFR+ | 109.9 / 0.0254 / 3,650 | 143.1 / 0.0154 / 4,740 |
+| MCCFR (external sampling) | 138.2 / 12.61 / 901,649 | 180.3 / 10.51 / 1,172,635 |
 
 Plot: `analysis/leduc_benchmark.png` (log-scale y, exploitability in mbb/hand vs training seconds).
 
@@ -93,7 +93,7 @@ Checks: exploiter exact EV equals game_value of its pure policy; all 8 exact EVs
 
 Reproduce: `python scripts/adaptive_matches.py --pairs 20000 --seed 0` (about 5.5 min)
 
-Adaptive (cap 1.0 and safe cap 0.2) vs 4 bots + equilibrium, 40k mirrored hands each, mbb/hand with 95% CI, in `analysis/adaptive_matches.csv` alongside equilibrium and exploiter rows (300k hands, copied from bot_matches.csv). Rerun in P6.5 after the card-removal model fix. Cap 1.0: always_call 1315, always_raise 2194, tight 638, random 1715, vs equilibrium -0.8 +/- 27.2. Cap 0.2: 811 / 632 / 152 / 881, vs equilibrium +6.8 +/- 24.4.
+Adaptive (cap 1.0 and safe cap 0.2) vs 4 bots + equilibrium, 40k mirrored hands each, mbb/hand with 95% CI, in `analysis/adaptive_matches.csv` alongside equilibrium and exploiter rows (300k hands, copied from bot_matches.csv). Rerun in P6.5 after the card-removal model fix. Cap 1.0: always_call 1315, always_raise 2194, tight 638, random 1715, vs equilibrium -0.8 +/- 27.2. Cap 0.2: 810 / 632 / 152 / 881, vs equilibrium +6.8 +/- 24.4.
 
 ## Phase 6 verification (P6.5)
 

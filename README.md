@@ -8,14 +8,14 @@ that shifts from equilibrium play toward exploiting a weak opponent.
 
 All results are verified against known values (e.g. Kuhn poker game value = -1/18 for player 1).
 
-**Status:** Phases 1–7 done (solvers, evaluation, bots, adaptive agent, terminal play). Phase 8 (writeup) in progress. See [PROGRESS.md](PROGRESS.md).
+**Status:** Phases 1–8 done (solvers, evaluation, bots, adaptive agent, terminal play, writeup: [analysis/writeup.md](analysis/writeup.md)). See [PROGRESS.md](PROGRESS.md).
 
 ## Quickstart
 Requires Python 3.11.
 
 ```bash
 pip install -r requirements.txt
-pytest -q                          # full test suite (under ~10 s)
+pytest -q                          # full test suite (83 tests, about 50 s)
 python scripts/run_kuhn_cfr.py     # vanilla CFR on Kuhn, 100k iters -> analysis/kuhn_cfr.csv
 python -m play.cli --game kuhn --seed 1 --hands 5   # play the bot in the terminal
 ```
@@ -59,7 +59,7 @@ Each row lists the command that reproduces it; the source csv is in `analysis/`.
 | Kuhn exploitability after 100000 iters (vanilla CFR) | 6.76e-04 (log-log slope -0.544, T>=10k) | `python scripts/kuhn_convergence.py --solver cfr && python analysis/plot_convergence.py` |
 | Kuhn exploitability after 100000 iters (CFR+) | 2.14e-06 (log-log slope -0.849, T>=10k) | `python scripts/kuhn_convergence.py --solver cfr_plus && python analysis/plot_convergence.py` |
 | CFR+ speedup vs vanilla (iters to expl < 0.001) | 331x (43080 vs 130 iters) | `python scripts/kuhn_convergence.py --solver cfr && python scripts/kuhn_convergence.py --solver cfr_plus` |
-| Leduc exploitability (mbb/hand) at 140 s: CFR / CFR+ / MCCFR | 12.26 / 0.0254 / 12.61 | `python scripts/leduc_benchmark.py && python analysis/plot_leduc.py` |
+| Leduc exploitability (mbb/hand), last checkpoint within 140 s: CFR / CFR+ / MCCFR | 12.26 / 0.0254 / 12.61 | `python scripts/leduc_benchmark.py && python analysis/plot_leduc.py` |
 | Exploiter (exact BR) vs bots, mbb/hand ±95% CI, 300k hands each | call +1470±7, raise +2377±14, tight +697±11, random +2367±18 (equilibrium: +636±7, +327±19, +61±11, +716±13) | `python scripts/bot_matches.py --pairs 150000 --seed 0` |
 | Adaptive agent vs bots, mbb/hand ±95% CI, 40k hands each (cap 1.0 / cap 0.2) | call +1315±19 / +810±20, raise +2194±40 / +632±51, tight +638±36 / +152±32, random +1715±40 / +881±36; vs equilibrium -1±27 / +7±24 | `python scripts/adaptive_matches.py --pairs 20000 --seed 0` |
 <!-- RESULTS_TABLE_END -->

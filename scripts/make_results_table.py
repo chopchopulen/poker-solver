@@ -83,7 +83,7 @@ def build():
         "| Kuhn exploitability after %d iters (vanilla CFR) | %.2e (log-log slope %.3f, T>=10k) | `python scripts/kuhn_convergence.py --solver cfr && python analysis/plot_convergence.py` |" % (k["cfr"][1], k["cfr"][0], k["cfr"][2]),
         "| Kuhn exploitability after %d iters (CFR+) | %.2e (log-log slope %.3f, T>=10k) | `python scripts/kuhn_convergence.py --solver cfr_plus && python analysis/plot_convergence.py` |" % (k["cfr_plus"][1], k["cfr_plus"][0], k["cfr_plus"][2]),
         "| CFR+ speedup vs vanilla (iters to expl < %g) | %.0fx (%s vs %s iters) | `python scripts/kuhn_convergence.py --solver cfr && python scripts/kuhn_convergence.py --solver cfr_plus` |" % (float(sp["target_exploitability"]), float(sp["speedup"]), sp["cfr_iters"], sp["cfr_plus_iters"]),
-        "| Leduc exploitability (mbb/hand) at %g s: CFR / CFR+ / MCCFR | %.2f / %.4f / %.2f | `python scripts/leduc_benchmark.py && python analysis/plot_leduc.py` |" % (LEDUC_T, le["cfr"], le["cfr_plus"], le["mccfr"]),
+        "| Leduc exploitability (mbb/hand), last checkpoint within %g s: CFR / CFR+ / MCCFR | %.2f / %.4f / %.2f | `python scripts/leduc_benchmark.py && python analysis/plot_leduc.py` |" % (LEDUC_T, le["cfr"], le["cfr_plus"], le["mccfr"]),
         "| Exploiter (exact BR) vs bots, mbb/hand ±95%% CI, %dk hands each | %s (equilibrium: %s) | `python scripts/bot_matches.py --pairs 150000 --seed 0` |" % (int(nb) // 1000, ex, eq),
         "| Adaptive agent vs bots, mbb/hand ±95%% CI, %dk hands each (cap 1.0 / cap 0.2) | %s; vs equilibrium %s | `python scripts/adaptive_matches.py --pairs 20000 --seed 0` |" % (int(na) // 1000, ad, ade),
     ]
