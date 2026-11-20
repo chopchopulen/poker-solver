@@ -28,7 +28,7 @@ Long runs go in scripts/ and write to analysis/*.csv. Tests stay under ~10 s tot
 - [x] P3.5 | opus | VERIFY Phase 3: review cfr_plus.py (floor at 0, averaging weights, alternation), rerun convergence script, confirm speedup number matches csv; mark Phase 3 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 3 DONE
 
 ## Phase 4: Leduc + MCCFR
-- [ ] P4.1 | sonnet | games/leduc.py: 6 cards (2 suits x J,Q,K), ante 1, raise 2 in round 1 and 4 in round 2, max 2 raises per round, public card after round 1, pair beats high card; tests for deal count, sample terminal payoffs, fold payoffs, infoset keys hide opponent card | done when: `pytest -q` passes
+- [x] P4.1 | sonnet | games/leduc.py: 6 cards (2 suits x J,Q,K), ante 1, raise 2 in round 1 and 4 in round 2, max 2 raises per round, public card after round 1, pair beats high card; tests for deal count, sample terminal payoffs, fold payoffs, infoset keys hide opponent card | done when: `pytest -q` passes
 - [ ] P4.2 | sonnet | Make CFR, CFR+, best response, exploitability run on Leduc (generic over Game); tests with small iteration counts that exploitability decreases | done when: `pytest -q` passes in < 10 s
 - [ ] P4.3 | sonnet | solvers/mccfr.py: external-sampling MCCFR with seeded RNG | done when: tests pass: Kuhn value within 0.02 of -1/18 after 20k iters, exploitability decreases on Leduc
 - [ ] P4.4 | sonnet | scripts/leduc_benchmark.py: run vanilla CFR, CFR+, MCCFR on Leduc for a fixed wall-clock budget each (total < 8 min), log exploitability in mbb/hand vs seconds to analysis/leduc_benchmark.csv, one summary line per solver | done when: csv has all 3 solvers
