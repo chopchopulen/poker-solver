@@ -8,6 +8,7 @@ class CFR:
         self.regret = {}     # key -> np.array of cumulative regrets
         self.strat_sum = {}  # key -> np.array of reach-weighted strategy sums
         self.actions = {}    # key -> list of legal actions
+        self._sigma = {}     # key -> current strategy, fixed within one iteration
 
     def _strategy(self, key, n):
         r = np.maximum(self.regret[key], 0.0)
@@ -34,7 +35,11 @@ class CFR:
             self.regret[key] = np.zeros(n)
             self.strat_sum[key] = np.zeros(n)
             self.actions[key] = list(acts)
-        sigma = self._strategy(key, n)
+        # freeze sigma^t for the whole iteration: an infoset is visited once per
+        # consistent deal, and regrets must not change sigma mid-pass
+        if key not in self._sigma:
+            self._sigma[key] = self._strategy(key, n)
+        sigma = self._sigma[key]
         util = np.zeros(n)
         for i, a in enumerate(acts):
             r = list(reach)
@@ -50,6 +55,7 @@ class CFR:
 
     def train(self, iterations):
         for _ in range(iterations):
+            self._sigma = {}
             self._walk(self.game.initial_state(), [1.0, 1.0, 1.0])
 
     def average_strategy(self):

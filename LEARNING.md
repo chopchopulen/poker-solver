@@ -9,11 +9,11 @@ $$r^t(I,a)=\pi_{-i}^{\sigma^t}(I)\,\big(v^{\sigma^t}(I,a)-v^{\sigma^t}(I)\big),\
 Next strategy (uniform if the denominator is 0, with $R^+=\max(R,0)$):
 $$\sigma^{T+1}(I,a)=\frac{R^{T,+}(I,a)}{\sum_{b}R^{T,+}(I,b)}.$$
 
-**Average strategy.** The current strategy $\sigma^t$ does not converge; the reach-weighted average does:
+**Average strategy.** The current strategy $\sigma^t$ does not converge; the reach-weighted average does. Within one iteration $\sigma^t$ is frozen: an infoset reached under several deals uses the same $\sigma^t$ each time, and new regrets only affect $\sigma^{t+1}$.
 $$\bar\sigma^T(I,a)=\frac{\sum_{t=1}^T \pi_i^{\sigma^t}(I)\,\sigma^t(I,a)}{\sum_{t=1}^T \pi_i^{\sigma^t}(I)}.$$
 Average regret $R^T/T=O(1/\sqrt T)$, and in a two-player zero-sum game, if each player's average regret is $\le\varepsilon$ then $\bar\sigma$ is a $2\varepsilon$-Nash equilibrium.
 
-**Kuhn equilibrium family.** P1 bets J with prob $\alpha\in[0,1/3]$, bets K with $3\alpha$, calls Q (after check-bet) with $\alpha+1/3$. P2 always bets/calls with K, bluffs J with 1/3 after a check, calls Q with 1/3. Game value is $-1/18$ for every $\alpha$. Our run: $\alpha\approx0.22$, value $-0.055554$ (`python scripts/run_kuhn_cfr.py`).
+**Kuhn equilibrium family.** P1 bets J with prob $\alpha\in[0,1/3]$, bets K with $3\alpha$, calls Q (after check-bet) with $\alpha+1/3$. P2 always bets/calls with K, bluffs J with 1/3 after a check, calls Q with 1/3. Game value is $-1/18$ for every $\alpha$. Our run: $\alpha\approx0.21$, value $-0.055555$ (`python scripts/run_kuhn_cfr.py`).
 
 **Q&A**
 1. *Why use the average strategy, not the current one?* Regret matching's current strategy can cycle around equilibrium and need not converge. The no-regret guarantee applies to the time-averaged strategy, which does converge in two-player zero-sum games.

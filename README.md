@@ -27,7 +27,7 @@ python scripts/run_kuhn_cfr.py
 Other solver, evaluation, and play commands will be added here as each phase lands.
 
 ## Kuhn + CFR
-Kuhn poker: 3 cards, ante 1, one bet of 1. Vanilla CFR keeps cumulative regret per information set, plays by regret matching, and the reach-weighted *average* strategy converges to Nash. The result lies in the known equilibrium family (P1 bets J with $\alpha\in[0,1/3]$, K with $3\alpha$; our run gives $\alpha\approx0.22$). Math in [LEARNING.md](LEARNING.md).
+Kuhn poker: 3 cards, ante 1, one bet of 1. Vanilla CFR keeps cumulative regret per information set, plays by regret matching, and the reach-weighted *average* strategy converges to Nash. The result lies in the known equilibrium family (P1 bets J with $\alpha\in[0,1/3]$, K with $3\alpha$; our run gives $\alpha\approx0.21$). Math in [LEARNING.md](LEARNING.md).
 
 ## Games
 | Game  | Deck | Rounds | Notes |
@@ -49,7 +49,7 @@ Every number below will link to the exact command that reproduces it (see `analy
 
 | Metric | Value | Command |
 |--------|-------|---------|
-| Kuhn game value (vanilla CFR, 100k iters) | -0.055554 (target -1/18 = -0.055556) | `python scripts/run_kuhn_cfr.py` |
+| Kuhn game value (vanilla CFR, 100k iters) | -0.055555 (target -1/18 = -0.055556) | `python scripts/run_kuhn_cfr.py` |
 | Kuhn exploitability after N iters (vanilla CFR) | TBD | TBD |
 | Kuhn exploitability after N iters (CFR+) | TBD | TBD |
 | CFR+ speedup vs vanilla (iters to target exploitability) | TBD | TBD |
