@@ -80,3 +80,11 @@ Data: `analysis/bot_matches.csv`. 150,000 mirrored pairs (300,000 hands) per pai
 Reproduce: `python scripts/bot_matches.py --pairs 150000 --seed 0` (about 60 s)
 
 Per-pairing mbb/hand and CI are in the csv (all 8 pairings: 2 agents x 4 bots).
+
+## Phase 5 verification (P5.7)
+
+Reproduce: `python scripts/verify_phase5.py` (about 5 s)
+
+Expected: `phase5 verify: br_gap=0.0e+00 csv_rows=8 outside_ci=0 ci_coverage=0.96 (100x1000 pairs) -> PASS`
+
+Checks: exploiter exact EV equals game_value of its pure policy; all 8 exact EVs inside simulated 95% CIs; chance cards identical across seatings for a fixed seed; empirical CI coverage over 100 independent matches. `python scripts/bot_matches.py --pairs 150000 --seed 0` reproduces `analysis/bot_matches.csv` byte-identically.

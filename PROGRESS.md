@@ -30,3 +30,4 @@
 - P5.3 eval/match.py play_match (mirrored pairs, seeded chance RNG, mean/mbb/95% CI over pair means) + tests/test_match.py; pytest -q 66 passed.
 - P5.5 scripts/bot_matches.py -> analysis/bot_matches.csv (8 pairings, 300k hands each, 60s; every exact EV inside 95% CI; exploiter 697-2377 mbb vs equilibrium 61-716); results.md entry; pytest -q passes. Repro: python scripts/bot_matches.py --pairs 150000 --seed 0
 - P5.6 LEARNING.md Phase 5 entry (mirroring, CI formula, 3 Q&As) + README bot-match results row (numbers from analysis/bot_matches.csv); pytest -q passes.
+- P5.7 VERIFY: scripts/verify_phase5.py PASS (BR value vs policy-eval gap 0; 8/8 exact EVs inside 95% CI; mirroring: same seed -> same cards both seats; CI coverage 0.96 over 100x1000-pair matches); CI = 1.96*s/sqrt(n) over iid pair means, correct; bot_matches.csv rerun byte-identical; README/LEARNING numbers match csv; no fixes needed. **Phase 5 DONE.** Repro: python scripts/verify_phase5.py

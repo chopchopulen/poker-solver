@@ -43,7 +43,7 @@ Long runs go in scripts/ and write to analysis/*.csv. Tests stay under ~10 s tot
 - [x] P5.4 | sonnet | agents/exploiter.py: plays the exact best response to a known fixed bot strategy (uses eval/best_response.py) | done when: test passes: exploiter's exact EV vs each bot >= equilibrium agent's exact EV vs that bot
 - [x] P5.5 | sonnet | scripts/bot_matches.py: equilibrium and exploiter vs each bot on Leduc, enough hands for tight CIs (run time < 8 min), write analysis/bot_matches.csv, results.md entry with command | done when: csv has all pairings with CIs
 - [x] P5.6 | sonnet | Docs: LEARNING.md Phase 5 entry (mirrored hands, variance reduction, CI formula in LaTeX, 3 Q&As); README results rows | done when: files updated, `pytest -q` passes
-- [ ] P5.7 | opus | VERIFY Phase 5: check simulated exploiter win rates fall within CI of the exact BR values, check CI math and mirroring, confirm no hand-typed numbers; mark Phase 5 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 5 DONE
+- [x] P5.7 | opus | VERIFY Phase 5: check simulated exploiter win rates fall within CI of the exact BR values, check CI math and mirroring, confirm no hand-typed numbers; mark Phase 5 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 5 DONE
 
 ## Phase 6: Adaptive agent
 - [ ] P6.1 | sonnet | agents/adaptive.py: online opponent model (Dirichlet counts per opponent infoset-visible situation, prior centered on equilibrium), best response to the model mixed with equilibrium by a confidence weight that grows with observations | done when: tests pass: with no observations it plays equilibrium; after many always-call hands its strategy moves toward the exploiter's
