@@ -53,7 +53,7 @@ Long runs go in scripts/ and write to analysis/*.csv. Tests stay under ~10 s tot
 - [x] P6.5 | opus | VERIFY Phase 6: review adaptive.py for leakage (model must use only what the agent observes), check win rates beat equilibrium vs weak bots and stay safe vs equilibrium; mark Phase 6 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 6 DONE
 
 ## Phase 7: Terminal play
-- [ ] P7.1 | sonnet | play/cli.py: `python -m play.cli --game kuhn|leduc --seed N`, human vs equilibrium bot, shows bot's action probabilities at its infoset after each move, running chip total; input/output injectable | done when: `python -m play.cli --help` works
+- [x] P7.1 | sonnet | play/cli.py: `python -m play.cli --game kuhn|leduc --seed N`, human vs equilibrium bot, shows bot's action probabilities at its infoset after each move, running chip total; input/output injectable | done when: `python -m play.cli --help` works
 - [ ] P7.2 | haiku | tests/test_cli.py: scripted inputs play full Kuhn and Leduc hands, invalid input reprompts | done when: `pytest -q` passes
 - [ ] P7.3 | sonnet | Docs: README play section; LEARNING.md Phase 7 short entry with 3 Q&As | done when: files updated
 - [ ] P7.4 | opus | VERIFY Phase 7: play one scripted hand per game, confirm shown probabilities match stored strategy and chips are correct; mark Phase 7 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 7 DONE
