@@ -1,10 +1,11 @@
-"""Market-making card game (Phase 9). Scaffold only: config + stub game.
+"""Market-making card game (Phase 9): config + 1-round game.
 
 Cards 1..deck_size dealt without replacement: MM card, taker card, hidden card.
 V = sum of the 3 cards. MM quotes (mid, spread) -> bid = mid - s/2, ask = mid + s/2.
 Taker sees the quote and picks buy / sell / pass. Zero-sum, 1 unit.
 """
 from dataclasses import dataclass
+from itertools import permutations
 
 from games.base import Game
 
@@ -35,34 +36,79 @@ class MMConfig:
 
 
 class MarketMakingGame(Game):
-    """Stub. Implemented in P9.2."""
+    """1-round market-making game. Player 0 = market maker (MM), player 1 = taker.
+
+    State = (cards, noise, quote, act):
+      cards = (mm_card, taker_card, hidden_card) or None before the deal;
+      noise = True/False (taker is a noise trader) or None before that chance node;
+      quote = index k = mid_idx * len(spreads) + spread_idx, or None before MM acts;
+      act   = 'b' (taker buys), 's' (sells), 'p' (passes), or None.
+    A noise trader's action is a uniform chance node, so the MM never sees the type.
+    """
 
     def __init__(self, config: MMConfig | None = None):
         self.config = (config or MMConfig()).validate()
+        if self.config.rounds != 1:
+            raise NotImplementedError("rounds=2 not implemented yet (P9.6)")
 
     def initial_state(self):
-        raise NotImplementedError
+        return (None, None, None, None)
 
     def is_terminal(self, state) -> bool:
-        raise NotImplementedError
+        return state[3] is not None
 
     def is_chance(self, state) -> bool:
-        raise NotImplementedError
+        cards, noise, quote, act = state
+        if act is not None:
+            return False
+        return cards is None or noise is None or (quote is not None and noise)
 
     def chance_outcomes(self, state):
-        raise NotImplementedError
+        cards, noise, _, _ = state
+        if cards is None:
+            deals = list(permutations(range(1, self.config.deck_size + 1), 3))
+            return [(d, 1 / len(deals)) for d in deals]
+        if noise is None:
+            q = self.config.noise_prob
+            return [(n, p) for n, p in ((True, q), (False, 1 - q)) if p > 0]
+        return [(a, 1 / 3) for a in "bsp"]
 
     def current_player(self, state) -> int:
-        raise NotImplementedError
+        return 0 if state[2] is None else 1
 
     def legal_actions(self, state):
-        raise NotImplementedError
+        if state[2] is None:
+            return list(range(len(self.config.mids) * len(self.config.spreads)))
+        return ["b", "s", "p"]
+
+    def quote(self, k: int):
+        """Return (bid, ask) for quote index k."""
+        mid = self.config.mids[k // len(self.config.spreads)]
+        spread = self.config.spreads[k % len(self.config.spreads)]
+        return mid - spread / 2, mid + spread / 2
 
     def next_state(self, state, action):
-        raise NotImplementedError
+        cards, noise, quote, act = state
+        if cards is None:
+            return (action, None, None, None)
+        if noise is None:
+            return (cards, action, None, None)
+        if quote is None:
+            return (cards, noise, action, None)
+        return (cards, noise, quote, action)
 
     def utility(self, state, player: int) -> float:
-        raise NotImplementedError
+        cards, _, quote, act = state
+        bid, ask = self.quote(quote)
+        v = sum(cards)
+        taker = {"b": v - ask, "s": bid - v, "p": 0}[act]
+        return -taker if player == 0 else taker
 
     def infoset_key(self, state, player: int) -> str:
-        raise NotImplementedError
+        cards, _, quote, _ = state
+        if player == 0:
+            return f"M{cards[0]}"
+        see = self.config.taker_sees
+        own = cards[1] if see >= 1 else "?"
+        hid = cards[2] if see >= 2 else "?"
+        return f"T{own}|{hid}|q{quote}"
