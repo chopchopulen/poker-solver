@@ -1,8 +1,10 @@
 """Exact best response of one player against a fixed strategy profile."""
 
 
-def best_response_value(game, strategies, player):
-    """Value to `player` of best-responding to strategies[1-player].
+def best_response(game, strategies, player):
+    """Return (value, best): best maps player infoset key -> action.
+
+    Value to `player` of best-responding to strategies[1-player].
 
     strategies: [strat0, strat1], each key -> {action: prob}. Only strategies[1-player] is used.
     Infoset-level: each infoset of `player` gets ONE action, chosen by summing over every
@@ -54,4 +56,9 @@ def best_response_value(game, strategies, player):
                 key=lambda a: sum(w * value(game.next_state(s, a)) for s, w in groups[key]))
         return value(game.next_state(state, best[key]))
 
-    return value(game.initial_state())
+    v = value(game.initial_state())
+    return v, best
+
+
+def best_response_value(game, strategies, player):
+    return best_response(game, strategies, player)[0]
