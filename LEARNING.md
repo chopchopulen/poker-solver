@@ -40,3 +40,20 @@ a slope of $-1/2$ on a log-log plot. Measured on Kuhn: slope $-0.544$ for $T\ge 
 1. *Why is exploitability better than checking game value?* Game value only checks the profile's payoff against itself. A non-equilibrium profile can have the right value yet be badly beatable. Exploitability is the gain of a best-responding opponent, so it is 0 iff Nash.
 2. *Why must best response aggregate over histories in an infoset?* The player cannot distinguish histories in the same infoset, so one action must serve all of them. Weight each history by opponent and chance reach, then maximize. Choosing per history would leak hidden information and overstate BR value.
 3. *Why a slope near -1/2 on the log-log plot?* Regret matching gives $O(\sqrt{T})$ cumulative regret, so average regret and hence exploitability decay like $T^{-1/2}$. Observed rates can be slightly better; CFR+ is often faster still.
+
+## Phase 3: CFR+
+
+**What it does.** CFR+ is vanilla CFR with three changes: (1) regret matching+ floors cumulative regret at zero, (2) players are updated alternately, (3) the average strategy is weighted linearly in the iteration. Same tree walk, same per-iteration cost, far fewer iterations needed.
+
+**The changes.**
+$$R^{T,+}(I,a)=\max\big(R^{T-1,+}(I,a)+r^T(I,a),\,0\big),\qquad \sigma^{T+1}(I,a)=\frac{R^{T,+}(I,a)}{\sum_{a'}R^{T,+}(I,a')}$$
+$$\bar\sigma^T(I,a)=\frac{\sum_{t=1}^T t\,\pi_i^{\sigma^t}(I)\,\sigma^t(I,a)}{\sum_{t=1}^T t\,\pi_i^{\sigma^t}(I)}$$
+
+**Why faster.** Vanilla CFR lets an action with large negative regret stay buried: it needs many iterations of positive regret just to climb back to zero. Flooring at 0 lets an action recover as soon as it becomes good. Linear weights discount the early, bad iterates (weight $t$ vs $1$), so the average tracks recent, near-equilibrium strategies. Alternating updates make each player respond to the other's freshly updated strategy. The proven worst-case bound is still $O(1/\sqrt T)$; the speedup is empirical.
+
+**Measured (Kuhn).** Iterations to exploitability $<10^{-3}$: vanilla 43080, CFR+ 130, speedup 331x (`analysis/results.md`, `analysis/kuhn_speedup.csv`). At 100k iters CFR+ exploitability is 2.14e-6 vs 6.76e-4 vanilla.
+
+**Q&A**
+1. *Why floor regrets at zero?* Negative regret only says an action was bad in the past. Keeping it delays that action's return when the opponent's strategy changes. Flooring discards stale history so play adapts fast.
+2. *Why average with weight $t$?* Early iterates are far from equilibrium. Linear weighting shrinks their influence, so the average converges faster. We still evaluate the average, not the current strategy.
+3. *Does CFR+ beat $O(1/\sqrt T)$ in theory?* No, the proven bound is the same. The gain is empirical (hundreds of times fewer iterations here), observed not guaranteed.

@@ -24,7 +24,7 @@ Long runs go in scripts/ and write to analysis/*.csv. Tests stay under ~10 s tot
 - [x] P3.1 | sonnet | solvers/cfr_plus.py: regrets floored at 0 (regret-matching+), alternating updates, linearly weighted average strategy | done when: tests pass: Kuhn value within 0.005 of -1/18 after 1000 iters, exploitability < vanilla CFR at same iters
 - [x] P3.2 | sonnet | Extend scripts/kuhn_convergence.py with --solver cfr_plus; append to csv; compute speedup = iters for vanilla to reach exploitability 1e-3 / iters for CFR+, print one summary line and write analysis/kuhn_speedup.csv | done when: both solvers in csv, speedup csv exists
 - [x] P3.3 | haiku | Update plot_convergence.py to draw both solvers on one log-log chart; results.md entry for speedup with command | done when: png shows 2 lines, results.md updated
-- [ ] P3.4 | sonnet | Docs: LEARNING.md Phase 3 entry (CFR+ changes and why they speed up convergence, LaTeX, 3 Q&As); README CFR+ row | done when: files updated, `pytest -q` passes
+- [x] P3.4 | sonnet | Docs: LEARNING.md Phase 3 entry (CFR+ changes and why they speed up convergence, LaTeX, 3 Q&As); README CFR+ row | done when: files updated, `pytest -q` passes
 - [ ] P3.5 | opus | VERIFY Phase 3: review cfr_plus.py (floor at 0, averaging weights, alternation), rerun convergence script, confirm speedup number matches csv; mark Phase 3 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 3 DONE
 
 ## Phase 4: Leduc + MCCFR
