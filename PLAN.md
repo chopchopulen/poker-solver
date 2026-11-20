@@ -25,7 +25,7 @@ Long runs go in scripts/ and write to analysis/*.csv. Tests stay under ~10 s tot
 - [x] P3.2 | sonnet | Extend scripts/kuhn_convergence.py with --solver cfr_plus; append to csv; compute speedup = iters for vanilla to reach exploitability 1e-3 / iters for CFR+, print one summary line and write analysis/kuhn_speedup.csv | done when: both solvers in csv, speedup csv exists
 - [x] P3.3 | haiku | Update plot_convergence.py to draw both solvers on one log-log chart; results.md entry for speedup with command | done when: png shows 2 lines, results.md updated
 - [x] P3.4 | sonnet | Docs: LEARNING.md Phase 3 entry (CFR+ changes and why they speed up convergence, LaTeX, 3 Q&As); README CFR+ row | done when: files updated, `pytest -q` passes
-- [ ] P3.5 | opus | VERIFY Phase 3: review cfr_plus.py (floor at 0, averaging weights, alternation), rerun convergence script, confirm speedup number matches csv; mark Phase 3 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 3 DONE
+- [x] P3.5 | opus | VERIFY Phase 3: review cfr_plus.py (floor at 0, averaging weights, alternation), rerun convergence script, confirm speedup number matches csv; mark Phase 3 DONE in PROGRESS.md | done when: checks pass and PROGRESS.md says Phase 3 DONE
 
 ## Phase 4: Leduc + MCCFR
 - [ ] P4.1 | sonnet | games/leduc.py: 6 cards (2 suits x J,Q,K), ante 1, raise 2 in round 1 and 4 in round 2, max 2 raises per round, public card after round 1, pair beats high card; tests for deal count, sample terminal payoffs, fold payoffs, infoset keys hide opponent card | done when: `pytest -q` passes
