@@ -96,15 +96,17 @@ Pairs are i.i.d. (hands within a pair are not), so the CI is computed over pair 
 
 **What it does.** The agent watches the opponent's public actions, builds a model of the opponent's strategy, computes a best response to that model, and plays a blend of equilibrium and that best response. The model only uses what the agent sees (public betting history and board), never the opponent's hidden card.
 
-**Opponent model.** For each public situation $h$, count opponent actions $c_h(a)$, $n_h=\sum_a c_h(a)$. Dirichlet posterior mean, prior centered on the equilibrium $\sigma^*$ with strength $\alpha_0$:
-$$\hat\sigma(a\mid h)=\frac{\alpha_0\,\sigma^*(a\mid h)+c_h(a)}{\alpha_0+n_h}$$
-With no data $\hat\sigma=\sigma^*$. Counts are pooled over the opponent's hidden cards, so a card-dependent opponent is approximated by its marginal action frequencies.
+**Opponent model.** For each public node $h$ (board + betting), count opponent actions $c_h(a)$, $n_h=\sum_a c_h(a)$. The opponent's card $x$ is hidden, so the counts only identify the *marginal* $\sum_x w_h(x)\,\sigma(a\mid x,h)$, where $w_h(x)$ is the distribution of the opponent's card over the observed deals at $h$:
+$$w_h(x)\propto\sum_o \frac{n_{h,o}}{n_h}\,P(x,\text{board}\mid o)\,\pi_{\text{opp}}^{\hat\sigma}(x\to h)$$
+($o$ = agent's own card, so card removal is included; $\pi_{\text{opp}}$ = opponent's reach under the model). The target marginal is a Dirichlet posterior mean with prior on the equilibrium marginal: $\hat p_h(a)=\frac{\alpha_0\sum_x w_h(x)\sigma^*(a\mid x,h)+c_h(a)}{\alpha_0+n_h}$. The model tilts equilibrium, $\hat\sigma(a\mid x,h)\propto\sigma^*_\epsilon(a\mid x,h)\,\lambda_h(a)$, with $\lambda_h$ fitted by iterative proportional fitting so the predicted marginal equals $\hat p_h$. This keeps equilibrium's card dependence. With no data $\hat\sigma=\sigma^*$.
+
+*P6.5 bug found:* the first version set $\hat\sigma(a\mid x,h)$ to the pooled frequency for every $x$ (card-independent). Against an equilibrium opponent that model is wrong (real equilibrium play depends on the card), so the best response attacked weaknesses that did not exist and lost -170 mbb/hand at cap 1.0. After the fix, the cap 1.0 match result vs equilibrium is -0.8±27.2.
 
 **Safe exploitation.** Let $\beta$ = best response to $\hat\sigma$. Play
 $$\sigma=(1-w)\,\sigma^*+w\,\beta,\qquad w=\min\left(\text{cap},\frac{n}{n+K}\right)$$
-$w$ grows with evidence $n$ and is capped. Cap 1.0 maximizes exploitation but is itself exploitable (-170±50 mbb/hand vs equilibrium); cap 0.2 loses only -44±27 vs equilibrium while still beating equilibrium's winnings vs call/raise/random bots (`analysis/adaptive_matches.csv`). Trade-off: higher $w$ = more profit vs weak bots, more loss vs a strong opponent.
+$w$ grows with evidence $n$ and is capped. Both cap 1.0 (-0.8±27.2 mbb/hand vs equilibrium) and cap 0.2 (+6.8±24.4) are safe vs equilibrium, and both beat equilibrium's winnings vs all four bots (`analysis/adaptive_matches.csv`). The cap still matters for model error, e.g. against an opponent that changes its strategy. Trade-off: higher $w$ = more profit vs weak bots, more loss vs a strong opponent.
 
 **Q&A**
 1. *Why center the prior on equilibrium?* With little data the agent should not overreact; it plays equilibrium (unexploitable) and only deviates as evidence accumulates.
 2. *Why cap the exploitation weight?* A best response to a wrong model can be exploited. The cap bounds the worst-case loss at the price of lower profit vs weak bots.
-3. *How do you know it doesn't cheat?* The model updates only from public history after each hand (`observe_end`); the opponent's private card is never an input.
+3. *How do you know it doesn't cheat?* The model updates only from public history, the board and the agent's own card; the opponent's private card is never an input. `test_no_leakage_of_opponent_card` scrambles the opponent's card in the state passed to the agent and checks that every decision is unchanged.

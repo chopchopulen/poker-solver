@@ -93,4 +93,10 @@ Checks: exploiter exact EV equals game_value of its pure policy; all 8 exact EVs
 
 Reproduce: `python scripts/adaptive_matches.py --pairs 20000 --seed 0` (about 5.5 min)
 
-Adaptive (cap 1.0 and safe cap 0.2) vs 4 bots + equilibrium, 40k mirrored hands each, mbb/hand with 95% CI, in `analysis/adaptive_matches.csv` alongside equilibrium and exploiter rows (300k hands, copied from bot_matches.csv). Cap 1.0: always_call 1383, always_raise 2304, tight 303, random 2233, vs equilibrium -170 +/- 50 (exploitable). Cap 0.2: 810 / 687 / 24 / 966, vs equilibrium -44 +/- 27.
+Adaptive (cap 1.0 and safe cap 0.2) vs 4 bots + equilibrium, 40k mirrored hands each, mbb/hand with 95% CI, in `analysis/adaptive_matches.csv` alongside equilibrium and exploiter rows (300k hands, copied from bot_matches.csv). Rerun in P6.5 after the card-removal model fix. Cap 1.0: always_call 1315, always_raise 2194, tight 638, random 1715, vs equilibrium -0.8 +/- 27.2. Cap 0.2: 811 / 632 / 152 / 881, vs equilibrium +6.8 +/- 24.4.
+
+## Phase 6 verification (P6.5)
+
+Reproduce: `python scripts/verify_phase6.py` (reads the csv above) and `pytest -q tests/test_adaptive.py`
+
+PASS: both caps beat equilibrium vs every bot (adaptive CI lower bound > equilibrium CI upper bound) and both have CI lower bound > -50 mbb/hand vs equilibrium (cap 1.0: -28.0, cap 0.2: -17.6). Leakage test: decisions identical when the opponent's card in the state is scrambled.

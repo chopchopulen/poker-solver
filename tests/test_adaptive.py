@@ -74,3 +74,27 @@ def test_safe_vs_equilibrium():
     from eval.match import play_match
     r = play_match(G, AdaptiveAgent(G, EQ, seed=1, cap=0.2), EquilibriumAgent(EQ, seed=2), 16000, seed=5)
     assert r["lo_mbb"] > -50, r
+
+
+def test_no_leakage_of_opponent_card():
+    """Agent decisions are identical when the opponent's card in the passed state is scrambled:
+    it may only use its own card, the board and the public history."""
+    from agents.bots import Tight
+
+    class Masked(AdaptiveAgent):
+        def act(self, game, state, infoset):
+            cards, board, hist = state
+            seat = game.current_player(state)
+            fake = tuple(c if i == seat else (c + 1) % 6 for i, c in enumerate(cards))
+            return super().act(game, (fake, board, hist), infoset)
+
+    logs = []
+    for cls in (AdaptiveAgent, Masked):
+        ag, bot, log = cls(G, EQ, seed=4, refresh=5, k=10), Tight(), []
+        orig = ag.act
+        ag.act = lambda g, s, k: log.append(orig(g, s, k)) or log[-1]
+        for i in range(60):
+            _play(G, (ag, bot), i)
+            _play(G, (bot, ag), i)
+        logs.append(log)
+    assert logs[0] == logs[1] and len(logs[0]) > 100
