@@ -1,0 +1,9 @@
+agent,bot,n_hands,mbb_per_hand,ci95_mbb,lo_mbb,hi_mbb,exact_mbb
+equilibrium,always_call,300000,636.15,7.35,628.8,643.5,633.18
+exploiter,always_call,300000,1470.48,7.36,1463.12,1477.84,1466.67
+equilibrium,always_raise,300000,327.15,18.64,308.51,345.79,334.58
+exploiter,always_raise,300000,2376.77,14.38,2362.39,2391.14,2366.67
+equilibrium,tight,300000,60.87,11.15,49.73,72.02,65.99
+exploiter,tight,300000,697.13,11.3,685.82,708.43,700.0
+equilibrium,random,300000,716.02,12.62,703.4,728.63,707.15
+exploiter,random,300000,2367.34,18.01,2349.33,2385.35,2373.61

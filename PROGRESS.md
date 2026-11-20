@@ -28,3 +28,4 @@
 - P5.2 agents/bots.py (always_call, always_raise, tight=K or paired board, random seeded) + tests/test_bots.py; pytest -q 63 passed.
 - P5.4 agents/exploiter.py (Exploiter = exact BR as pure strategy; bot_strategy converts bot->strategy dict) + eval/best_response.py exposes best_response()->(value,best); tests/test_exploiter.py: exploiter EV >= equilibrium EV vs all 4 bots, both seats; pytest -q 74 passed.
 - P5.3 eval/match.py play_match (mirrored pairs, seeded chance RNG, mean/mbb/95% CI over pair means) + tests/test_match.py; pytest -q 66 passed.
+- P5.5 scripts/bot_matches.py -> analysis/bot_matches.csv (8 pairings, 300k hands each, 60s; every exact EV inside 95% CI; exploiter 697-2377 mbb vs equilibrium 61-716); results.md entry; pytest -q passes. Repro: python scripts/bot_matches.py --pairs 150000 --seed 0

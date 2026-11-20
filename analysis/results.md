@@ -72,3 +72,11 @@ python scripts/leduc_value.py --iters 3000
 ```
 
 Expected: `leduc cfr_plus iters=3000 value_p1=-0.085605 bounds=[-0.085655,-0.085586] expl=3.45e-05 chips/hand`
+
+## Leduc: equilibrium and exploiter vs fixed bots (P5.5)
+
+Data: `analysis/bot_matches.csv`. 150,000 mirrored pairs (300,000 hands) per pairing, seed 0; mbb/hand for the agent (1 chip = 1 bb), 95% CI over pair means; `exact_mbb` = exact EV from the game tree for comparison. Equilibrium = CFR+ 2000-iter average strategy.
+
+Reproduce: `python scripts/bot_matches.py --pairs 150000 --seed 0` (about 60 s)
+
+Per-pairing mbb/hand and CI are in the csv (all 8 pairings: 2 agents x 4 bots).
