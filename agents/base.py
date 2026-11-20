@@ -9,3 +9,6 @@ class Agent(ABC):
 
     def reset(self):
         """Clear per-match memory (default: stateless)."""
+
+    def observe_end(self, game, hist, seat):
+        """Called after each hand with the public betting history (default: ignore)."""

@@ -19,6 +19,8 @@ def _play(game, agents, chance_seed):
             a = agents[p].act(game, s, game.infoset_key(s, p))
             assert a in game.legal_actions(s), "illegal action"
         s = game.next_state(s, a)
+    for p in (0, 1):
+        agents[p].observe_end(game, s[2], p)  # public history only
     return game.utility(s, 0), game.utility(s, 1)
 
 
