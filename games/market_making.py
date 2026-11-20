@@ -36,50 +36,57 @@ class MMConfig:
 
 
 class MarketMakingGame(Game):
-    """1-round market-making game. Player 0 = market maker (MM), player 1 = taker.
+    """Market-making game, 1 or 2 rounds. Player 0 = market maker (MM), player 1 = taker.
 
-    State = (cards, noise, quote, act):
+    State = (cards, noise, q1, a1, q2, a2):
       cards = (mm_card, taker_card, hidden_card) or None before the deal;
-      noise = True/False (taker is a noise trader) or None before that chance node;
-      quote = index k = mid_idx * len(spreads) + spread_idx, or None before MM acts;
-      act   = 'b' (taker buys), 's' (sells), 'p' (passes), or None.
+      noise = True/False (taker is a noise trader, fixed for both rounds) or None;
+      q = index k = mid_idx * len(spreads) + spread_idx, or None before MM acts;
+      a = 'b' (taker buys), 's' (sells), 'p' (passes), or None.
     A noise trader's action is a uniform chance node, so the MM never sees the type.
+    rounds=2: MM requotes after seeing a1; payoff is the sum of both trades (V is fixed).
     """
 
     def __init__(self, config: MMConfig | None = None):
         self.config = (config or MMConfig()).validate()
-        if self.config.rounds != 1:
-            raise NotImplementedError("rounds=2 not implemented yet (P9.6)")
 
     def initial_state(self):
-        return (None, None, None, None)
+        return (None,) * 6
+
+    def _last(self) -> int:
+        return 3 if self.config.rounds == 1 else 5
 
     def is_terminal(self, state) -> bool:
-        return state[3] is not None
+        return state[self._last()] is not None
 
     def is_chance(self, state) -> bool:
-        cards, noise, quote, act = state
-        if act is not None:
+        if self.is_terminal(state):
             return False
-        return cards is None or noise is None or (quote is not None and noise)
+        if state[0] is None or state[1] is None:
+            return True
+        return bool(state[1]) and self._pending_action(state)
+
+    @staticmethod
+    def _pending_action(state) -> bool:
+        """True if a quote was posted and the taker has not yet acted on it."""
+        return (state[2] is not None and state[3] is None) or (state[4] is not None and state[5] is None)
 
     def chance_outcomes(self, state):
-        cards, noise, _, _ = state
-        if cards is None:
+        if state[0] is None:
             deals = list(permutations(range(1, self.config.deck_size + 1), 3))
             return [(d, 1 / len(deals)) for d in deals]
-        if noise is None:
+        if state[1] is None:
             q = self.config.noise_prob
             return [(n, p) for n, p in ((True, q), (False, 1 - q)) if p > 0]
         return [(a, 1 / 3) for a in "bsp"]
 
     def current_player(self, state) -> int:
-        return 0 if state[2] is None else 1
+        return 1 if self._pending_action(state) else 0
 
     def legal_actions(self, state):
-        if state[2] is None:
-            return list(range(len(self.config.mids) * len(self.config.spreads)))
-        return ["b", "s", "p"]
+        if self._pending_action(state):
+            return ["b", "s", "p"]
+        return list(range(len(self.config.mids) * len(self.config.spreads)))
 
     def quote(self, k: int):
         """Return (bid, ask) for quote index k."""
@@ -88,27 +95,27 @@ class MarketMakingGame(Game):
         return mid - spread / 2, mid + spread / 2
 
     def next_state(self, state, action):
-        cards, noise, quote, act = state
-        if cards is None:
-            return (action, None, None, None)
-        if noise is None:
-            return (cards, action, None, None)
-        if quote is None:
-            return (cards, noise, action, None)
-        return (cards, noise, quote, action)
+        i = state.index(None)  # slots fill in order: cards, noise, q1, a1, q2, a2
+        return state[:i] + (action,) + state[i + 1:]
 
     def utility(self, state, player: int) -> float:
-        cards, _, quote, act = state
-        bid, ask = self.quote(quote)
+        cards = state[0]
         v = sum(cards)
-        taker = {"b": v - ask, "s": bid - v, "p": 0}[act]
+        taker = 0.0
+        for q, a in ((state[2], state[3]), (state[4], state[5])):
+            if a is None:
+                continue
+            bid, ask = self.quote(q)
+            taker += {"b": v - ask, "s": bid - v, "p": 0}[a]
         return -taker if player == 0 else taker
 
     def infoset_key(self, state, player: int) -> str:
-        cards, _, quote, _ = state
+        cards, _, q1, a1, q2, _ = state
+        r2 = q2 is not None or (q1 is not None and a1 is not None)  # round-2 decision node
         if player == 0:
-            return f"M{cards[0]}"
+            return f"M{cards[0]}|q{q1}|{a1}" if r2 else f"M{cards[0]}"
         see = self.config.taker_sees
         own = cards[1] if see >= 1 else "?"
         hid = cards[2] if see >= 2 else "?"
-        return f"T{own}|{hid}|q{quote}"
+        key = f"T{own}|{hid}|q{q1}"
+        return f"{key}|{a1}|q{q2}" if r2 else key

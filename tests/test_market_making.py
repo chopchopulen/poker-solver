@@ -107,9 +107,45 @@ def test_keys_hide_unseen_cards():
     assert key(1, (1, 2, 3))[1] != key(1, (2, 1, 3))[1]
 
 
-def test_rounds2_not_yet():
-    with pytest.raises(NotImplementedError):
-        MarketMakingGame(MMConfig(rounds=2))
+def _count(g, s):
+    if g.is_terminal(s):
+        return 1
+    acts = [a for a, _ in g.chance_outcomes(s)] if g.is_chance(s) else g.legal_actions(s)
+    return sum(_count(g, g.next_state(s, a)) for a in acts)
+
+
+def test_rounds2_tree_shape():
+    g = _game(rounds=2, deck_size=3, mids=(6,), spreads=(2, 4))
+    s = g.next_state(g.next_state(g.initial_state(), (1, 2, 3)), False)
+    assert g.current_player(s) == 0 and not g.is_chance(s)
+    s = g.next_state(s, 0)
+    assert g.current_player(s) == 1 and not g.is_terminal(s)
+    s = g.next_state(s, "b")
+    assert not g.is_terminal(s) and g.current_player(s) == 0  # MM requotes
+    s = g.next_state(s, 1)
+    assert g.current_player(s) == 1
+    t = g.next_state(s, "s")
+    assert g.is_terminal(t) and g.utility(t, 0) + g.utility(t, 1) == 0
+    # V=6: round 1 quote 0 (5,7) buy -> -1; round 2 quote 1 (4,8) sell -> 4-6 = -2
+    assert g.utility(t, 1) == (6 - 7) + (4 - 6)
+    # 6 deals x 2 noise types x (2 quotes x 3 acts)^2
+    assert _count(g, g.initial_state()) == 6 * 2 * 36
+
+
+def test_rounds2_keys_visibility():
+    g = _game(rounds=2, taker_sees=1)
+
+    def at(cards, q1, a1, q2=None):
+        s = g.next_state(g.next_state(g.initial_state(), cards), False)
+        s = g.next_state(g.next_state(s, q1), a1)
+        return s if q2 is None else g.next_state(s, q2)
+
+    m1, m2 = at((1, 2, 3), 0, "b"), at((1, 4, 5), 0, "b")
+    assert g.infoset_key(m1, 0) == g.infoset_key(m2, 0)  # MM: own card + history only
+    assert g.infoset_key(m1, 0) != g.infoset_key(at((1, 2, 3), 0, "s"), 0)
+    t1, t2 = at((1, 2, 3), 0, "b", 1), at((4, 2, 5), 0, "b", 1)
+    assert g.infoset_key(t1, 1) == g.infoset_key(t2, 1)  # taker sees own card only
+    assert g.infoset_key(t1, 1) != g.infoset_key(at((1, 2, 3), 0, "b", 2), 1)
 
 
 def test_mm_solve_small_deck_converges():
