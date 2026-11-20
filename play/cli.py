@@ -12,7 +12,7 @@ from games.leduc import LeducPoker
 GAMES = {"kuhn": KuhnPoker, "leduc": LeducPoker}
 NAMES = {"kuhn": {"p": "pass/check/fold", "b": "bet/call"},
          "leduc": {"f": "fold", "c": "check/call", "r": "raise"}}
-RANKS = {"kuhn": "JQK", "leduc": "QKA"}
+RANKS = {"kuhn": "JQK", "leduc": "JQK"}
 STRAT_DIR = os.path.join(os.path.dirname(__file__), "..", "analysis", "strategies")
 
 

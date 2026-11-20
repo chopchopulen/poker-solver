@@ -39,3 +39,4 @@
 - P7.1 play/cli.py: human vs equilibrium bot (kuhn|leduc), shows bot action probs each move + running chips, injectable inp/out, seats alternate; `python -m play.cli --help` ok; scripted hands ok; pytest -q 78 passed. Repro: python -m play.cli --game leduc --seed 1
 - P7.2 tests/test_cli.py: scripted full Kuhn+Leduc hands (seats alternate, running total = sum of results), invalid input reprompts; pytest -q 83 passed.
 - P7.3 README play section + LEARNING.md Phase 7 entry (3 Q&As).
+- P7.4 VERIFY: scripts/verify_phase7.py PASS (40 scripted hands/game, both seats: 94 Kuhn + 199 Leduc shown probs == stored avg strategy to 3dp, no unseen-infoset fallback; every hand result == independent payoff, running total correct; 500-hand rerun PASS; mutation tests (uniform probs / negated utility) caught); fixed Leduc rank labels QKA->JQK to match games/leduc.py; pytest -q 83 passed. **Phase 7 DONE.** Repro: python scripts/verify_phase7.py
