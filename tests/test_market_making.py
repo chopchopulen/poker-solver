@@ -110,3 +110,10 @@ def test_keys_hide_unseen_cards():
 def test_rounds2_not_yet():
     with pytest.raises(NotImplementedError):
         MarketMakingGame(MMConfig(rounds=2))
+
+
+def test_mm_solve_small_deck_converges():
+    from scripts.mm_solve import solve
+    cfg = MMConfig(deck_size=5, mids=(6, 9), spreads=(1, 3))
+    _, _, rows = solve(cfg, 300, npoints=3)
+    assert rows[-1][2] < 0.01
