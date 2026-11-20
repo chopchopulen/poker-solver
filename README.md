@@ -54,7 +54,7 @@ Every number below will link to the exact command that reproduces it (see `analy
 | Kuhn exploitability after 100k iters (CFR+) | 2.14e-6 | `python scripts/kuhn_convergence.py --solver cfr_plus && python analysis/plot_convergence.py` |
 | CFR+ speedup vs vanilla (iters to expl < 1e-3) | 331x (43080 vs 130 iters) | `python scripts/kuhn_convergence.py --solver cfr && python scripts/kuhn_convergence.py --solver cfr_plus` |
 | Leduc exploitability (mbb/hand) after 140 s: CFR / CFR+ / MCCFR | 12.25 / 0.0154 / 10.51 | `python scripts/leduc_benchmark.py && python analysis/plot_leduc.py` |
-| Best response win rate vs bots (95% CI) | TBD | TBD |
+| Exploiter (exact BR) vs bots, mbb/hand ±95% CI, 300k hands each | call +1470±7, raise +2377±14, tight +697±11, random +2367±18 (equilibrium: +636±7, +327±19, +61±11, +716±13) | `python scripts/bot_matches.py --pairs 150000 --seed 0` |
 | Adaptive agent win rate vs bots (95% CI) | TBD | TBD |
 
 ## Charts

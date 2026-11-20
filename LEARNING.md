@@ -74,3 +74,20 @@ is unbiased because $q(z)$ cancels the $\pi_{-i}\pi_c$ factor in the true counte
 1. *Why is the external-sampling estimate unbiased?* Each sampled terminal is divided by its sampling probability $\pi_{-i}\pi_c$, cancelling the opponent/chance reach in the counterfactual value, so the expectation equals the full-tree value.
 2. *Why does CFR+ beat MCCFR on Leduc?* Leduc is small enough to traverse fully, so CFR+ iterations carry no sampling variance and the regret floor speeds convergence. MCCFR's edge is cost per iteration, which matters only for huge trees.
 3. *Why must infoset keys hide the opponent card?* Keys must contain only what the player sees. Including the opponent card lets the solver peek, giving an invalid strategy whose exploitability looks artificially low.
+
+## Phase 5: Bots, best response, mirrored matches
+
+**What it does.** Four fixed Leduc bots (always-call, always-raise, tight, random) play 300k hands each against (a) the CFR+ equilibrium agent and (b) an exploiter that plays the exact best response to the bot. Each hand pair is the same deal played twice with seats swapped, so card luck cancels.
+
+**Mirroring (variance reduction).** For pair $i$ with agent A's chips $a_i^{(0)}$ (seat 0) and $a_i^{(1)}$ (seat 1), the sample is $x_i=\tfrac12(a_i^{(0)}+a_i^{(1)})$. Both seatings share the deal, so the luck component of $a^{(0)}$ and $a^{(1)}$ is negatively correlated and $\operatorname{Var}(x_i)<\operatorname{Var}(a)$.
+
+**95% CI.** With $n$ pairs, $\bar x=\tfrac1n\sum x_i$, $s^2=\tfrac1{n-1}\sum(x_i-\bar x)^2$:
+$$\bar x\pm 1.96\,\frac{s}{\sqrt n}$$
+Pairs are i.i.d. (hands within a pair are not), so the CI is computed over pair means. Normal approximation by the CLT. Units: mbb/hand = 1000 x chips (1 chip = ante = 1 bb).
+
+**Measured.** Exploiter earns 697-2377 mbb/hand vs the bots; equilibrium earns 61-716. Every exact best-response/equilibrium EV lies inside its simulated 95% CI (`analysis/bot_matches.csv`, `analysis/results.md`).
+
+**Q&A**
+1. *Why mirror the hands?* The same cards are played from both seats, so the lucky-deal term cancels in the pair mean. Same accuracy needs far fewer hands.
+2. *Why compute the CI over pairs, not hands?* The two hands of a pair share a deal and are correlated. Pair means are independent, so $s/\sqrt n$ over pairs is valid; over hands it would be too narrow.
+3. *Why does equilibrium win less than the exploiter?* Equilibrium guarantees no loss but does not adapt to a bot's mistakes. The best response is tuned to one known bot, so it wins more against it but could lose to others.
