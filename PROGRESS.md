@@ -20,3 +20,4 @@
 - P4.1 games/leduc.py (30 deals, 4 board outcomes, raise cap 2, rank-based infoset keys hiding opp card) + tests/test_leduc.py; pytest -q 48 passed.
 - P4.2 CFR, CFR+, BR, exploitability already generic over Game; tests/test_leduc_solvers.py (expl decreases 5->20 iters, < uniform); pytest -q 50 passed in 4.8s.
 - P4.3 solvers/mccfr.py (external sampling, seeded numpy RNG, avg strategy accumulated at opp nodes) + tests/test_mccfr.py; Kuhn 20k iters value within 0.02 of -1/18, Leduc expl 3000<100 iters, seeded determinism; pytest -q 53 passed in 6s.
+- P4.4 scripts/leduc_benchmark.py -> analysis/leduc_benchmark.csv (140s budget/solver): cfr 7999 it 12.2 mbb/hand, cfr_plus 4740 it 0.015 mbb/hand, mccfr 1.17M it 10.5 mbb/hand; pytest -q 53 passed. Repro: python scripts/leduc_benchmark.py
