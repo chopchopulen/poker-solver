@@ -116,3 +116,17 @@ Game: deck 10, mids (8,11,14,17,20), spreads (1,2,4), taker_sees 1, noise_prob 0
 | Max exploitability over the 6 info configs | 1.67e-04 | analysis/mm_game_info.csv | `python scripts/mm_info.py --iters 1000` |
 | 2-round (deck 6): round-2 mid after buy vs sell, MM card 5 | 11.67 vs 10.67 | analysis/mm_game_2round.csv | `python scripts/mm_2round.py` |
 | 2-round exploitability, 1000 iters | 9.61e-05 | `python scripts/mm_2round.py` output (P9.6 log) | `python scripts/mm_2round.py` |
+
+## HU push/fold (Phase 10)
+Equity: 169x169, 120000 boards/pair, max SE 0.0016; spot checks vs exact enumeration within ~1.2 SE (`analysis/pushfold_equity_validation.csv`). Blinds 0.5/1, stacks 1-20 BB, 2000 CFR+ iters each.
+
+| Metric | Value | Source | Command |
+|---|---|---|---|
+| Max exploitability over stacks 1-20 | 9.71e-07 BB/hand (S=15) | analysis/pushfold_summary.csv | `python scripts/pushfold_solve.py` |
+| Shove% (combo-weighted) S=1 / 2 / 10 / 20 | 100.0 / 90.3 / 58.1 / 40.3 | analysis/pushfold_summary.csv | `python scripts/pushfold_solve.py` |
+| Call% (combo-weighted) S=1 / 2 / 10 / 20 | 100.0 / 100.0 / 37.4 / 21.7 | analysis/pushfold_summary.csv | `python scripts/pushfold_solve.py` |
+| Equity table max SE | 0.00160 | analysis/pushfold_equity.npz | `python scripts/pushfold_equity.py --boards 120000 --validate` |
+| S=10, AJo: SB shove / BB call | 1.0000 / 1.0000 | analysis/pushfold_ranges.csv | `python -m play.pushfold --stack 10 --hand AJo` |
+| S=10, 72o: SB shove / BB call | 0.0000 / 0.0000 | analysis/pushfold_ranges.csv | `python -m play.pushfold --stack 10 --hand 72o` |
+
+Shove% decreases monotonically with stack over 1-20 in the csv. External chart comparison pending (no outside source accessed).

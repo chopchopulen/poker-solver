@@ -80,10 +80,19 @@ Zero-sum card game: MM quotes (mid, spread) knowing one card; taker (informed or
 
 ![MM info sweep](analysis/mm_game_info.png)
 
+## Push/fold (heads-up no-limit)
+SB shoves or folds, BB calls or folds; blinds 0.5/1, stacks 1-20 BB. 169x169 preflop equity table (Monte Carlo boards, card-removal weighted), vectorized CFR+ per stack. Observed: exploitability <= 9.71e-07 BB/hand at every stack; combo-weighted shove% 100.0 (1 BB), 58.1 (10 BB), 40.3 (20 BB), decreasing with stack. These are equilibria of this model with Monte Carlo equities; external comparison pending. Numbers and commands: [analysis/results.md](analysis/results.md).
+
+Query: `python -m play.pushfold --stack 10 --hand AJo`
+
+![Shove/call vs stack](analysis/pushfold_shove_call.png)
+
+![10 BB chart](analysis/pushfold_chart_10.png)
+
 ## Roadmap
 - [x] Phases 1–8: Kuhn/Leduc CFR, CFR+, MCCFR, exploitability, bots, adaptive agent, terminal play, writeup
 - [x] Phase 9: market-making card game (MM quotes bid/ask, informed + noise taker) solved with CFR+ — quotes vs private card, spread vs taker information, adverse selection
-- [ ] Phase 10: heads-up no-limit push/fold solver (169x169 equity table, equilibrium for 1–20 BB stacks, range charts, query tool)
+- [ ] Phase 10 (docs done, verification pending): heads-up no-limit push/fold solver (169x169 equity table, equilibrium for 1–20 BB stacks, range charts, query tool)
 
 ## What I learned
 Detailed notes per phase in [LEARNING.md](LEARNING.md). Raw results and reproduce commands in [analysis/results.md](analysis/results.md).

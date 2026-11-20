@@ -138,3 +138,18 @@ A buy is evidence of a high taker card, so ask $>\mathbb{E}[V]$; a sell gives bi
 1. *Why do you need noise traders?* Without them every trade is against an informed counterparty, so the MM's best quote is to not trade. Noise flow is the revenue that pays for adverse selection.
 2. *What is adverse selection here?* Conditioning on "taker bought" shifts the posterior of $V$ up. An MM quoting $\mathbb{E}[V]$ loses on buys and sells to informed flow; widening the spread or shading the mid after a trade compensates.
 3. *Your spread did not widen with taker information. Why?* The grid max (4) already gives the best EV in all configs, so the MM is at the ceiling; the effect shows up in trade rate (0.18 -> 0.51 -> 0.63) and MM EV vs informed flow instead. A wider grid would be needed to test the prediction.
+
+## Phase 10: HU no-limit push/fold
+
+**What it does.** Heads-up, blinds 0.5/1, effective stack $S$ BB. SB shoves or folds; BB facing a shove calls or folds. Hands grouped into 169 classes (13 pairs x6 combos, 78 suited x4, 78 offsuit x12). Equity table $eq[i][j]$ (SB class $i$ vs BB class $j$, ties = half) and joint weight $w[i][j]$ (number of non-conflicting combo pairs = card removal) are cached in `analysis/pushfold_equity.npz`. Per stack, vectorized CFR+ solves the 169-class game; the average strategy is reported.
+
+**Math.** SB payoffs (BB): fold $-0.5$; shove and BB folds $+1$; shove and BB calls $S(2\,eq_{ij}-1)$. With SB shove prob. $x_i$ and BB call prob. $y_j$:
+$$u_{SB}(x,y)=\sum_{i,j}\frac{w_{ij}}{W}\Big[x_i\big(y_j\,S(2eq_{ij}-1)+(1-y_j)\big)+(1-x_i)(-0.5)\Big],\quad W=\sum_{ij}w_{ij}.$$
+Card removal: $w_{ij}\ne n_i n_j$ because e.g. AA vs AK share aces; weighting by non-conflicting combos is the right chance-node probability. Exploitability (BB/hand):
+$$\varepsilon(x,y)=\tfrac12\Big[\max_{x'}u_{SB}(x',y)-\min_{y'}u_{SB}(x,y')\Big],$$
+zero iff $(x,y)$ is a Nash equilibrium of this zero-sum game.
+
+**Q&A**
+1. *Why weight by $w_{ij}$?* Class pairs share cards, so the number of possible deals differs per pair (AA vs AA = 6 combo pairs, not 36). Ignoring it biases range-level EV.
+2. *How do you know it is an equilibrium?* Best-response exploitability is below $10^{-6}$ BB at every stack (`analysis/pushfold_summary.csv`). It certifies the modeled game with Monte Carlo equities (max SE 0.0016), not "solved poker".
+3. *Why do ranges widen as the stack shrinks?* A shove risks $S$ to win 1.5, so small $S$ means small risk for the same dead money; BB also gets better pot odds, so calls widen too. Observed: shove 100% at $S=1$, 40.3% at $S=20$.
