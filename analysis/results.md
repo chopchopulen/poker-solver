@@ -60,3 +60,15 @@ python analysis/plot_leduc.py
 ```
 
 Expected summary line from the last command: `plot_leduc: 73 pts, cfr final=12.25, cfr_plus final=0.01541, mccfr final=10.51, wrote analysis/leduc_benchmark.png`
+
+## Leduc game value (P4.7 verification)
+
+CFR+ 3000 iterations: P1 value of average strategy = -0.085605 chips/hand. Certified bounds on the true game value from exact best responses, $-BR_1(\sigma_0) \le v^* \le BR_0(\sigma_1)$: v* in [-0.085655, -0.085586] (exploitability 3.45e-05 chips/hand). The interval contains the commonly cited Leduc value of about -0.0856 for P1. That citation was not checked against a source in this run because web access was denied.
+
+Units: Leduc has no blinds, so 1 big blind = 1 chip = the ante, and mbb/hand = 1000 * chips/hand.
+
+```
+python scripts/leduc_value.py --iters 3000
+```
+
+Expected: `leduc cfr_plus iters=3000 value_p1=-0.085605 bounds=[-0.085655,-0.085586] expl=3.45e-05 chips/hand`
