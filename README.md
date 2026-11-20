@@ -50,7 +50,7 @@ Every number below will link to the exact command that reproduces it (see `analy
 | Metric | Value | Command |
 |--------|-------|---------|
 | Kuhn game value (vanilla CFR, 100k iters) | -0.055555 (target -1/18 = -0.055556) | `python scripts/run_kuhn_cfr.py` |
-| Kuhn exploitability after N iters (vanilla CFR) | TBD | TBD |
+| Kuhn exploitability after 100k iters (vanilla CFR) | 6.76e-4 (log-log slope -0.544, T>=10k) | `python scripts/kuhn_convergence.py && python analysis/plot_convergence.py` |
 | Kuhn exploitability after N iters (CFR+) | TBD | TBD |
 | CFR+ speedup vs vanilla (iters to target exploitability) | TBD | TBD |
 | Leduc exploitability (mbb/hand), all solvers | TBD | TBD |
@@ -58,8 +58,10 @@ Every number below will link to the exact command that reproduces it (see `analy
 | Adaptive agent win rate vs bots (95% CI) | TBD | TBD |
 
 ## Charts
-_None yet._ Planned:
-- Kuhn exploitability vs iterations (log-log), vanilla CFR vs CFR+
+![Kuhn convergence](analysis/kuhn_convergence.png)
+
+Kuhn exploitability vs iterations (log-log), vanilla CFR. Planned:
+- Add CFR+ to the same chart
 - Leduc exploitability (mbb/hand) vs wall-clock time, all solvers
 
 ## What I learned

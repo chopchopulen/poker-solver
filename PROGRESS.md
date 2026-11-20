@@ -10,3 +10,4 @@
 - P2.2 eval/exploitability.py (exploitability, to_mbb_per_hand) + tests/test_exploitability.py; CFR 5k <0.01, uniform >0.05, >=0; pytest -q 38 passed.
 - P2.3 scripts/kuhn_convergence.py + analysis/kuhn_convergence.csv; 100k iters: expl 0.4583 (iter 1) -> 6.76e-4; pytest -q 38 passed. Repro: python scripts/kuhn_convergence.py
 - P2.4 analysis/plot_convergence.py -> analysis/kuhn_convergence.png (log-log, T^-1/2 ref); analysis/results.md entry; slope(T>=10k)=-0.544; pytest -q 38 passed. Repro: python analysis/plot_convergence.py
+- P2.5 LEARNING.md Phase 2 entry (BR, exploitability, O(1/sqrt T), 3 Q&As); README results row + chart; pytest -q passes.
