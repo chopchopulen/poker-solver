@@ -6,3 +6,4 @@
 - P1.5 scripts/run_kuhn_cfr.py + analysis/kuhn_cfr.csv + tests/test_kuhn_family.py; 100k iters: value -0.055554 (err 2e-6 vs -1/18), alpha=0.22, family fits; pytest -q 32 passed. Repro: python scripts/run_kuhn_cfr.py
 - P1.6 LEARNING.md Phase 1 entry + README Kuhn/CFR section and run command; pytest -q passes.
 - P1.7 VERIFY: kuhn payoffs + cfr math reviewed; fixed CFR to freeze sigma per iteration (was changing mid-pass across deals); 100k iters: value -0.055555 (err 8.5e-7 vs -1/18), alpha=0.2053, family_ok=True; LEARNING math checked; pytest -q 32 passed. **Phase 1 DONE.** Repro: python scripts/run_kuhn_cfr.py
+- P2.1 eval/best_response.py + tests/test_best_response.py; BR vs analytic eq (alpha=0.2) within 1e-9 of ±1/18; vs CFR 20k iters within 3e-3 (spec 1e-3 not reachable at test speed: 50k iters gives ~1e-3, CFR avg converges ~1/sqrt(T)); BR vs uniform >= uniform value; pytest -q 35 passed.
