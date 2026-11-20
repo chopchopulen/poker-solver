@@ -1,12 +1,14 @@
 # Poker Solver — project rules and plan
 
 ## Rules (always follow)
-- I HAND-WRITE the core logic: games/kuhn.py, games/leduc.py, solvers/cfr.py, solvers/cfr_plus.py, eval/best_response.py. Never write these files. If I'm stuck: hints, pseudocode, or point at the bug — then I fix it.
-- You MAY write: scaffolding, the Game interface skeleton (signatures + docstrings only), tests, plots, CLI, bots, README drafts.
-- Before each phase: explain the concepts (math in LaTeX) and quiz me with 2-3 questions.
-- Verify everything against known results (Kuhn game value = -1/18). Never accept an unverified result.
-- At the END of every session, update PROGRESS.md: what got done, what's next, open bugs.
-- I make my own commits for core files.
+- You write all the code for this project. I review and edit.
+- Work through the phases in order. A phase is DONE only when its "done when" check passes and tests pass. If the previous phase isn't marked DONE in PROGRESS.md, finish it first.
+- Verify every result against known values (Kuhn game value = -1/18). Never fake, guess, or hand-type a result. Every number in analysis/results.md must include the exact command that reproduces it.
+- Run `pytest -q` before every commit. Commit after each working step with a clear message.
+- If stuck on the same bug for 3 attempts, log it in PROGRESS.md under "Open bugs" with what you tried, and move on to what you can do next.
+- After each phase: append a plain-English explanation to LEARNING.md (what it does, the key math in LaTeX, 3 review questions with answers).
+- At the end of every run: update PROGRESS.md (done / next / open bugs / numbers so far).
+- Keep README.md current: what the project is, how to run it, results table, charts.
 
 ## Stack
 Python 3.11, numpy, pytest, matplotlib. Run tests with `pytest -q`.
