@@ -39,3 +39,24 @@ python analysis/plot_convergence.py
 ```
 
 Expected summary line from the last command: `plot_convergence: 76 pts, cfr slope=-0.544, cfr_plus slope=-0.849, wrote analysis/kuhn_convergence.png`
+
+## Leduc: exploitability vs time, all solvers
+
+Source: `analysis/leduc_benchmark.csv` (140 s training budget per solver, last logged point):
+
+| solver | final exploitability (mbb/hand) | iterations |
+|---|---|---|
+| vanilla CFR | 12.25 | 7,999 |
+| CFR+ | 0.0154 | 4,740 |
+| MCCFR (external sampling) | 10.51 | 1.17M |
+
+Plot: `analysis/leduc_benchmark.png` (log-scale y, exploitability in mbb/hand vs training seconds).
+
+Reproduce:
+
+```
+python scripts/leduc_benchmark.py
+python analysis/plot_leduc.py
+```
+
+Expected summary line from the last command: `plot_leduc: 73 pts, cfr final=12.25, cfr_plus final=0.01541, mccfr final=10.51, wrote analysis/leduc_benchmark.png`
