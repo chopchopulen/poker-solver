@@ -8,10 +8,10 @@ that shifts from equilibrium play toward exploiting a weak opponent.
 
 All results are verified against known values (e.g. Kuhn poker game value = -1/18 for player 1).
 
-**Status:** Phases 1–10 done (solvers, evaluation, bots, adaptive agent, terminal play, writeup: [analysis/writeup.md](analysis/writeup.md); market-making game; HU push/fold). See [PROGRESS.md](PROGRESS.md).
+**Status:** Complete. All phases (1–10) done (solvers, evaluation, bots, adaptive agent, terminal play, writeup: [analysis/writeup.md](analysis/writeup.md); market-making game; HU push/fold). See [PROGRESS.md](PROGRESS.md).
 
 ## Quickstart
-Requires Python 3.11.
+Tested on Python 3.14.
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate

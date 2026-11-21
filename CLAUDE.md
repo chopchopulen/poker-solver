@@ -11,7 +11,7 @@
 - Keep README.md current: what the project is, how to run it, results table, charts.
 
 ## Stack
-Python 3.11, numpy, pytest, matplotlib. Run tests with `pytest -q`.
+Python 3.14 (tested), numpy, pytest, matplotlib, treys. Run tests with `pytest -q`.
 
 ## Structure
 games/ (base.py, kuhn.py, leduc.py) · solvers/ (cfr.py, cfr_plus.py, mccfr.py) · eval/ (best_response.py, exploitability.py, match.py) · agents/ (equilibrium, bots, exploiter, adaptive) · play/cli.py · analysis/ (plots, results.md) · tests/ · LEARNING.md (my notes) · PROGRESS.md (session log)
@@ -45,9 +45,6 @@ Use the AVERAGE strategy, not the current one · info-set keys contain only what
 - Solve per stack (vectorized CFR+ or fictitious play over classes); exploitability via best response, in BB.
 - Outputs: 13x13 range charts, shove%/call% vs stack plot, `python -m play.pushfold --stack 10 --hand AJo`.
 - Verify: exploitability ~0; ranges widen as S shrinks; very short stacks shove nearly all. External chart comparison ONLY if a source is actually accessed; else write "external comparison pending". Never invent chart values.
-
-## Add-ons (after phase 10)
-Analysis of my own tournament hand histories · precomputed strategy tables for <1ms decisions (No Limit tournament)
 
 ## Token rules (always follow)
 - Be terse. No long explanations in replies; put explanations in LEARNING.md only at the end of a phase.
