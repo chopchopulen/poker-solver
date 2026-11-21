@@ -130,5 +130,6 @@ Equity: 169x169, 120000 boards/pair, max SE 0.0016; spot checks vs exact enumera
 | Equity table max SE | 0.00160 | analysis/pushfold_equity.npz | `python scripts/pushfold_equity.py --boards 120000 --validate` |
 | S=10, AJo: SB shove / BB call | 1.0000 / 1.0000 | analysis/pushfold_ranges.csv | `python -m play.pushfold --stack 10 --hand AJo` |
 | S=10, 72o: SB shove / BB call | 0.0000 / 0.0000 | analysis/pushfold_ranges.csv | `python -m play.pushfold --stack 10 --hand 72o` |
+| Agreement with PokerStrategy HU Nash chart (no ante), S=9–11 | 98.1% of decisions; shove 7/507 differ, call 12/507 differ; max abs(EV edge) of disagreements 0.117 BB | analysis/pushfold_chart_compare.csv | `python scripts/pushfold_compare_chart.py` |
 
-Shove% decreases monotonically with stack over 1-20 in the csv. External chart comparison pending (no outside source accessed).
+Shove% decreases monotonically with stack over 1-20 in the csv. Our 9–11 BB equilibrium matches PokerStrategy's HU Nash push/fold chart (no ante; "Nash Ranges for the Push-or-Fold Play", Table 1, https://www.pokerstrategy.com/strategy/sit-and-go/1779/, accessed 2026-11-20) on 98.1% of hand decisions at 9–11 BB (shove: 7/507 differ; call: 12/507 differ). Every disagreement is a marginal hand (|EV edge| ≤ 0.12 BB, vs +4.3 BB for AA calling at 10 BB); cause not established (Monte Carlo equity error and chart precision are candidates). Reproduce: `python scripts/pushfold_compare_chart.py` (per-hand detail: `analysis/pushfold_chart_compare.csv`).

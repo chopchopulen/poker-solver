@@ -88,7 +88,7 @@ Zero-sum card game: MM quotes (mid, spread) knowing one card; taker (informed or
 ![MM info sweep](analysis/mm_game_info.png)
 
 ## Push/fold (heads-up no-limit)
-SB shoves or folds, BB calls or folds; blinds 0.5/1, stacks 1-20 BB. 169x169 preflop equity table (Monte Carlo boards, card-removal weighted), vectorized CFR+ per stack. Observed: exploitability <= 9.71e-07 BB/hand at every stack; combo-weighted shove% 100.0 (1 BB), 58.1 (10 BB), 40.3 (20 BB), decreasing with stack. These are equilibria of this model with Monte Carlo equities; external comparison pending. Numbers and commands: [analysis/results.md](analysis/results.md).
+SB shoves or folds, BB calls or folds; blinds 0.5/1, stacks 1-20 BB. 169x169 preflop equity table (Monte Carlo boards, card-removal weighted), vectorized CFR+ per stack. Observed: exploitability <= 9.71e-07 BB/hand at every stack; combo-weighted shove% 100.0 (1 BB), 58.1 (10 BB), 40.3 (20 BB), decreasing with stack. These are equilibria of this model with Monte Carlo equities. At 9–11 BB they match PokerStrategy's HU Nash push/fold chart (no ante; "Nash Ranges for the Push-or-Fold Play", Table 1, https://www.pokerstrategy.com/strategy/sit-and-go/1779/, accessed 2026-11-20) on 98.1% of hand decisions (shove: 7/507 differ; call: 12/507 differ). Every disagreement is a marginal hand (|EV edge| ≤ 0.12 BB, vs +4.3 BB for AA calling at 10 BB); cause not established (Monte Carlo equity error and chart precision are candidates). Reproduce: `python scripts/pushfold_compare_chart.py` (per-hand detail: `analysis/pushfold_chart_compare.csv`). Numbers and commands: [analysis/results.md](analysis/results.md).
 
 Query: `python -m play.pushfold --stack 10 --hand AJo`
 
